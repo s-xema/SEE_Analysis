@@ -1,7 +1,7 @@
 # Spanish Electricity System Analysis
 Spanish Electricity System data analytics project repository
 
-### [Here you can interact with the dashboard](https://app.powerbi.com/view?r=eyJrIjoiMWYwOWRiMmItZTNhOS00ZTViLTkzYzEtYWExYTVjYmE0MWM2IiwidCI6Ijk5YTVhNjM1LTY1OGEtNGFhMS04MGIxLTdiM2IwNzcxZTkxYiIsImMiOjl9)
+### [The complete interactive report can be found here](https://app.powerbi.com/view?r=eyJrIjoiMWYwOWRiMmItZTNhOS00ZTViLTkzYzEtYWExYTVjYmE0MWM2IiwidCI6Ijk5YTVhNjM1LTY1OGEtNGFhMS04MGIxLTdiM2IwNzcxZTkxYiIsImMiOjl9)
 
 ![dash_balance](images/dash_balance.JPG)
 
