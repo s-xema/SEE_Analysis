@@ -46,7 +46,7 @@ Both stages have been orchestrated and automated in *data pipelines* for each da
 
 ![pipline etl_balance](images/pipeline2.JPG)
 
-![DW_Balance](images/DW_Balance.jpg)
+![DW_Balance](images/DW_Balance.JPG)
 
 
 ## Report development:
@@ -61,9 +61,9 @@ PowerBI has been used to develop the report, allowing to carry out the following
   + Building the data visualizations
   + Developing the dashboard
 
-![data_model](images/data_model.jpg)
+![data_model](images/data_model.JPG)
 
-![multi_model](images/multi_model.jpg)
+![multi_model](images/multi_model.JPG)
 
 [^1]: the multilingual model has been created following @TedPattison instructions and his [repository](https://github.com/PowerBiDevCamp/TranslationsBuilder/blob/main/Docs/Building%20Multi-language%20Reports%20in%20Power%20BI.md#extending-the-datasource-schema-to-support-data-translations).
 
