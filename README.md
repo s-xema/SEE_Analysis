@@ -41,7 +41,7 @@ The **ETL** process:
 This process has been implemented in two stages; the first one involves loading the historical data (from 01/01/2018 until the implementation date), while the second stage schedules the incremental loading of monthly data.
 
 Both stages have been orchestrated and automated in *data pipelines* for each data series: Balance, CCAA and Inter.
-
+![pipline etl_balance](/images/pipeline2.jpg)
 
 
 ## Report development:
