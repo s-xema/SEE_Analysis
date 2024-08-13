@@ -1,7 +1,7 @@
 # Spanish Electricity System Analysis
 Spanish Electricity System data analytics project repository
 
-***[Here you can interact with the dashboard](https://app.powerbi.com/view?r=eyJrIjoiMWYwOWRiMmItZTNhOS00ZTViLTkzYzEtYWExYTVjYmE0MWM2IiwidCI6Ijk5YTVhNjM1LTY1OGEtNGFhMS04MGIxLTdiM2IwNzcxZTkxYiIsImMiOjl9)
+### [Here you can interact with the dashboard](https://app.powerbi.com/view?r=eyJrIjoiMWYwOWRiMmItZTNhOS00ZTViLTkzYzEtYWExYTVjYmE0MWM2IiwidCI6Ijk5YTVhNjM1LTY1OGEtNGFhMS04MGIxLTdiM2IwNzcxZTkxYiIsImMiOjl9)
 
 The goal of this project is to create an end-to-end data analytics platform for the Spanish Electricity System, encompassing everything from data collection at the source to the construction of a Data Warehouse (DW) and the development of dashboards for comprehensive analysis.
  
@@ -9,7 +9,7 @@ The development of this project has been based on the following premises: automa
 
 The implementation of this project has involved the following steps:
 
-##Collecting data from source:
+## Collecting data from source:
 
 The data source has been Red Eléctrica Española (REE), more precisely its information platform called [REData](https://www.ree.es/es/datos/generacion), which offers a [public API](https://www.ree.es/es/apidatos) for data consultation.
 
@@ -29,7 +29,7 @@ API request example:
 
 By developing the queries with Postman, it has been possible to define them prior to the extraction phase.
 
-##Data Warehouse Building: 
+## Data Warehouse Building: 
 
 This step has been developed on Microsoft Fabrics Platform, using Data Factory, Synapse data Engineering and Synapse data warehouse tools.
 
@@ -44,7 +44,7 @@ Both stages have been orchestrated and automated in *data pipelines* for each da
 
 
 
-##Report development:
+## Report development:
 
 PowerBI has been used to develop the report, allowing to carry out the following tasks:
 
