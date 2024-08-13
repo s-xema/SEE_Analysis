@@ -51,10 +51,10 @@ PowerBI has been used to develop the report, allowing to carry out the following
   + Connecting to the DW in Fabrics and data import
   + Building a complete Data Modeling
   + Developing the necessary measures in DAX
-  + Implementing a _multilingual model*_ (English, Spanish and Portuguese)
+  + Implementing a _multilingual model[^1]_ (English, Spanish and Portuguese)
   + Creating a visual template
   + Building the data visualizations
   + Developing the dashboard
 
-_*the multilingual model has been created following @TedPattison instructions and his [repository](https://github.com/PowerBiDevCamp/TranslationsBuilder/blob/main/Docs/Building%20Multi-language%20Reports%20in%20Power%20BI.md#extending-the-datasource-schema-to-support-data-translations)._
+_[^1]the multilingual model has been created following @TedPattison instructions and his [repository](https://github.com/PowerBiDevCamp/TranslationsBuilder/blob/main/Docs/Building%20Multi-language%20Reports%20in%20Power%20BI.md#extending-the-datasource-schema-to-support-data-translations)._
 
