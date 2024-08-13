@@ -34,14 +34,14 @@ By developing the queries with Postman, it has been possible to define them prio
 This step has been developed on Microsoft Fabrics Platform, using Data Factory, Synapse data Engineering and Synapse data warehouse tools.
 
 The **ETL** process:
-    • **Extracting** data from API in *json* format and loading into a Data Lake for temporary storage
-    • **Transforming** the *json* file into a data table with the desired structure using dataflow and loading it into an intermediate database (staging area)
-    • **Loading** data in the final DW using an incremental SQL procedure
+    + **Extracting** data from API in *json* format and loading into a Data Lake for temporary storage
+    + **Transforming** the *json* file into a data table with the desired structure using dataflow and loading it into an intermediate database (staging area)
+    + **Loading** data in the final DW using an incremental SQL procedure
 
 This process has been implemented in two stages; the first one involves loading the historical data (from 01/01/2018 until the implementation date), while the second stage schedules the incremental loading of monthly data.
 
 Both stages have been orchestrated and automated in *data pipelines* for each data series: Balance, CCAA and Inter.
-![pipline etl_balance](/images/pipeline2.jpg)
+![pipline etl_balance](images/pipeline2.JPG)
 
 
 ## Report development:
