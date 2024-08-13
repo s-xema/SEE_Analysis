@@ -45,9 +45,11 @@ This process has been implemented in two stages; the first one involves loading 
 Both stages have been orchestrated and automated in *data pipelines* for each data series: Balance, CCAA and Inter.
 
 ![pipline etl_balance](images/pipeline2.JPG)
+
 *pipeline etl_balance*
 
 ![DW_Balance](images/DW_Balance.JPG)
+
 *data warehouse balance*
 
 ## Report development:
