@@ -45,9 +45,10 @@ This process has been implemented in two stages; the first one involves loading 
 Both stages have been orchestrated and automated in *data pipelines* for each data series: Balance, CCAA and Inter.
 
 ![pipline etl_balance](images/pipeline2.JPG)
+*pipeline etl_balance*
 
 ![DW_Balance](images/DW_Balance.JPG)
-
+*data warehouse balance*
 
 ## Report development:
 
@@ -62,8 +63,9 @@ PowerBI has been used to develop the report, allowing to carry out the following
   + Developing the dashboard
 
 ![data_model](images/data_model.JPG)
+*data model in powerbi*
 
 ![multi_model](images/multi_model.JPG)
-
+*multilingual model*
 [^1]: the multilingual model has been created following @TedPattison instructions and his [repository](https://github.com/PowerBiDevCamp/TranslationsBuilder/blob/main/Docs/Building%20Multi-language%20Reports%20in%20Power%20BI.md#extending-the-datasource-schema-to-support-data-translations).
 
