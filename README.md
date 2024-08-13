@@ -3,6 +3,8 @@ Spanish Electricity System data analytics project repository
 
 ### [Here you can interact with the dashboard](https://app.powerbi.com/view?r=eyJrIjoiMWYwOWRiMmItZTNhOS00ZTViLTkzYzEtYWExYTVjYmE0MWM2IiwidCI6Ijk5YTVhNjM1LTY1OGEtNGFhMS04MGIxLTdiM2IwNzcxZTkxYiIsImMiOjl9)
 
+![dash_balance](images/dash_balance.JPG)
+
 The goal of this project is to create an end-to-end data analytics platform for the Spanish Electricity System, encompassing everything from data collection at the source to the construction of a Data Warehouse (DW) and the development of dashboards for comprehensive analysis.
  
 The development of this project has been based on the following premises: automatic data updating, employment of Microsoft Fabrics platform, creation of a Data Warehouse, extraction of data from API and development of a multilingual dashboard using PowerBI. 
@@ -41,7 +43,10 @@ The **ETL** process:
 This process has been implemented in two stages; the first one involves loading the historical data (from 01/01/2018 until the implementation date), while the second stage schedules the incremental loading of monthly data.
 
 Both stages have been orchestrated and automated in *data pipelines* for each data series: Balance, CCAA and Inter.
+
 ![pipline etl_balance](images/pipeline2.JPG)
+
+![DW_Balance](images/DW_Balance.jpg)
 
 
 ## Report development:
@@ -55,6 +60,10 @@ PowerBI has been used to develop the report, allowing to carry out the following
   + Creating a visual template
   + Building the data visualizations
   + Developing the dashboard
+
+![data_model](images/data_model.jpg)
+
+![multi_model](images/multi_model.jpg)
 
 [^1]: the multilingual model has been created following @TedPattison instructions and his [repository](https://github.com/PowerBiDevCamp/TranslationsBuilder/blob/main/Docs/Building%20Multi-language%20Reports%20in%20Power%20BI.md#extending-the-datasource-schema-to-support-data-translations).
 
