@@ -15,10 +15,10 @@ The data source has been Red Eléctrica Española (REE), more precisely its info
 
 From the REE data catalog, the following series have been selected: 
 
-  +**Balance:** Daily energy generation / consumption by source
-  +**CCAA:** Energy generation / consumption by region
-  +**Inter:** Daily international electricity exchange (import / export)
-  +**Power:** Annual installed power by energy source
+  + **Balance:** Daily energy generation / consumption by source
+  + **CCAA:** Energy generation / consumption by region
+  + **Inter:** Daily international electricity exchange (import / export)
+  + **Power:** Annual installed power by energy source
 
 
 API request schema:
@@ -48,13 +48,13 @@ Both stages have been orchestrated and automated in *data pipelines* for each da
 
 PowerBI has been used to develop the report, allowing to carry out the following tasks:
 
-  +Connecting to the DW in Fabrics and data import
-  +Building a complete Data Modeling
-  +Developing the necessary measures in DAX
-  +Implementing a _multilingual model*_ (English, Spanish and Portuguese)
-  +Creating a visual template
-  +Building the data visualizations
-  +Developing the dashboard
+  + Connecting to the DW in Fabrics and data import
+  + Building a complete Data Modeling
+  + Developing the necessary measures in DAX
+  + Implementing a _multilingual model*_ (English, Spanish and Portuguese)
+  + Creating a visual template
+  + Building the data visualizations
+  + Developing the dashboard
 
 _*the multilingual model has been created following @TedPattison instructions and his [repository](https://github.com/PowerBiDevCamp/TranslationsBuilder/blob/main/Docs/Building%20Multi-language%20Reports%20in%20Power%20BI.md#extending-the-datasource-schema-to-support-data-translations)._
 
