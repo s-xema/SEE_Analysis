@@ -22,7 +22,7 @@ table fact_balance
 
 	column Date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: Short Date
 		lineageTag: 29ec16ba-9ebc-4296-97d5-32bd7e9ec038
 		summarizeBy: none
 		sourceColumn: Date
@@ -37,9 +37,12 @@ table fact_balance
 				    Source = Sql.Database("gwtklgmkmwquvafrpm5qo4pjdm-az7hilevrpdenkbtmsiemdzchy.datawarehouse.pbidedicated.windows.net", "DWH_Balance_electrico"),
 				    dbo_fact_balance = Source{[Schema="dbo",Item="fact_balance"]}[Data],
 				    #"Renamed Columns" = Table.RenameColumns(dbo_fact_balance,{{"id", "SourceID"}, {"value", "Energy"}, {"date", "Date"}}),
-				    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each [Energy] > 0.001 or [Energy] < -0.001)
+				    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each [Energy] > 0.001 or [Energy] < -0.001),
+				    #"Filtered Rows1" = Table.SelectRows(#"Filtered Rows", each ([SourceID] <> "Almacenamiento"))
 				in
-				    #"Filtered Rows"
+				    #"Filtered Rows1"
 
-	annotation PBI_ResultType = Exception
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
 

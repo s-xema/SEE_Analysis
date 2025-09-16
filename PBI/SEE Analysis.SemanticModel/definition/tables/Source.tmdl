@@ -129,9 +129,13 @@ table Source
 				    #"Merged Queries1" = Table.NestedJoin(#"Replaced Value4", {"SourceId"}, #"Source Colours", {"SourceId"}, "Source Colours", JoinKind.LeftOuter),
 				    #"Expanded Source Colours" = Table.ExpandTableColumn(#"Merged Queries1", "Source Colours", {"Color"}, {"Color.1"}),
 				    #"Merged Queries2" = Table.NestedJoin(#"Expanded Source Colours", {"SourceId"}, #"Sort Source", {"SourceId"}, "Sort Source", JoinKind.LeftOuter),
-				    #"Expanded Sort Source" = Table.ExpandTableColumn(#"Merged Queries2", "Sort Source", {"order"}, {"order"})
+				    #"Expanded Sort Source" = Table.ExpandTableColumn(#"Merged Queries2", "Sort Source", {"order"}, {"order"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Expanded Sort Source", each ([SourceId] <> null)),
+				    #"Removed Duplicates" = Table.Distinct(#"Filtered Rows", {"SourceId"})
 				in
-				    #"Expanded Sort Source"
+				    #"Removed Duplicates"
 
 	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
 

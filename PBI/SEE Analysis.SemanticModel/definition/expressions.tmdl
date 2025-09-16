@@ -1,6 +1,19 @@
-expression 'Sources ES' =
+expression 'Sources ES' = ```
 		let
-		    Source = Json.Document(Web.Contents("https://apidatos.ree.es/es/datos/balance/balance-electrico?start_date=2022-01-01T00:00&end_date=2022-12-31T23:59&time_trunc=day")),
+		    Source = Json.Document(
+		        Web.Contents(
+		            "https://apidatos.ree.es",
+		            [
+		                RelativePath =  "es/datos/balance/balance-electrico",
+		                Query = 
+		                [
+		                    start_date = _year&"-01-01T00:00",
+		                    end_date= _year&"-12-31T00:00" ,
+		                    time_trunc= "day"                        
+		                ]        
+		            ]
+		        )
+		    ),
 		    #"Converted to Table" = Table.FromRecords({Source}),
 		    #"Expanded data" = Table.ExpandRecordColumn(#"Converted to Table", "data", {"type", "id", "attributes", "meta"}, {"data.type", "data.id", "data.attributes", "data.meta"}),
 		    #"Expanded data.attributes" = Table.ExpandRecordColumn(#"Expanded data", "data.attributes", {"title", "last-update", "description"}, {"data.attributes.title", "data.attributes.last-update", "data.attributes.description"}),
@@ -14,11 +27,12 @@ expression 'Sources ES' =
 		    #"Expanded included.attributes.content.attributes" = Table.ExpandRecordColumn(#"Expanded included.attributes.content1", "included.attributes.content.attributes", {"title", "description", "color", "type", "magnitude", "composite", "last-update", "values", "total"}, {"included.attributes.content.attributes.title", "included.attributes.content.attributes.description", "included.attributes.content.attributes.color", "included.attributes.content.attributes.type", "included.attributes.content.attributes.magnitude", "included.attributes.content.attributes.composite", "included.attributes.content.attributes.last-update", "included.attributes.content.attributes.values", "included.attributes.content.attributes.total"}),
 		    #"Changed Type" = Table.TransformColumnTypes(#"Expanded included.attributes.content.attributes",{{"data.type", type text}, {"data.id", type text}, {"data.attributes.title", type text}, {"data.attributes.last-update", type datetimezone}, {"data.attributes.description", type text}, {"data.meta.cache-control.cache", type text}, {"data.meta.cache-control.expireAt", type datetime}, {"included.type", type text}, {"included.id", type text}, {"included.attributes.title", type text}, {"included.attributes.last-update", type datetimezone}, {"included.attributes.description", type text}, {"included.attributes.magnitude", type any}, {"included.attributes.content.type", type text}, {"included.attributes.content.id", type text}, {"included.attributes.content.groupId", type text}, {"included.attributes.content.attributes.title", type text}, {"included.attributes.content.attributes.description", type text}, {"included.attributes.content.attributes.color", type text}, {"included.attributes.content.attributes.type", type text}, {"included.attributes.content.attributes.magnitude", type any}, {"included.attributes.content.attributes.composite", type logical}, {"included.attributes.content.attributes.last-update", type datetimezone}, {"included.attributes.content.attributes.values", type any}, {"included.attributes.content.attributes.total", type number}}),
 		    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"included.attributes.content.type","included.attributes.content.groupId", "included.attributes.content.id" }),
-		    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([included.attributes.content.id] <> "Demanda en b.c." and [included.attributes.content.id] <> "No-Renovable" and [included.attributes.content.id] <> "Renovable")),
+		    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([included.attributes.content.id] <> "Demanda en b.c." and [included.attributes.content.id] <> "No-Renovable" and [included.attributes.content.id] <> "Renovable" and [included.attributes.content.id] <> "Almacenamiento")),
 		    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows",{{"included.attributes.content.type", "SourceTranslationSpanish"}, {"included.attributes.content.groupId", "CategoryTranslationSpanish"}, {"included.attributes.content.id", "SourceId"}}),
-		    #"Appended Query" = Table.Combine({#"Renamed Columns", #"Sources ES (1473)"})
+		    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns","Demanda en b.c.","Intercambio",Replacer.ReplaceText,{"CategoryTranslationSpanish"})
 		in
-		    #"Appended Query"
+		    #"Replaced Value"
+		```
 	lineageTag: 8ead281a-ce5d-4a06-8361-79e55ab88709
 	queryGroup: SourceGroup
 
@@ -84,9 +98,22 @@ expression intercambio =
 
 	annotation PBI_ResultType = Table
 
-expression 'Sources EN' =
+expression 'Sources EN' = ```
 		let
-		    Source = Json.Document(Web.Contents("https://apidatos.ree.es/en/datos/balance/balance-electrico?start_date=2022-01-01T00:00&end_date=2022-12-31T23:59&time_trunc=day")),
+		    Source = Json.Document(
+		        Web.Contents(
+		            "https://apidatos.ree.es",
+		            [
+		                RelativePath =  "en/datos/balance/balance-electrico",
+		                Query = 
+		                [
+		                    start_date = _year&"-01-01T00:00",
+		                    end_date= _year&"-12-31T00:00" ,
+		                    time_trunc= "day"                        
+		                ]        
+		            ]
+		        )
+		    ),
 		    #"Converted to Table" = Table.FromRecords({Source}),
 		    #"Expanded data" = Table.ExpandRecordColumn(#"Converted to Table", "data", {"type", "id", "attributes", "meta"}, {"data.type", "data.id", "data.attributes", "data.meta"}),
 		    #"Expanded data.attributes" = Table.ExpandRecordColumn(#"Expanded data", "data.attributes", {"title", "last-update", "description"}, {"data.attributes.title", "data.attributes.last-update", "data.attributes.description"}),
@@ -100,15 +127,29 @@ expression 'Sources EN' =
 		    #"Expanded included.attributes.content.attributes" = Table.ExpandRecordColumn(#"Expanded included.attributes.content1", "included.attributes.content.attributes", {"title", "description", "color", "type", "magnitude", "composite", "last-update", "values", "total"}, {"included.attributes.content.attributes.title", "included.attributes.content.attributes.description", "included.attributes.content.attributes.color", "included.attributes.content.attributes.type", "included.attributes.content.attributes.magnitude", "included.attributes.content.attributes.composite", "included.attributes.content.attributes.last-update", "included.attributes.content.attributes.values", "included.attributes.content.attributes.total"}),
 		    #"Changed Type" = Table.TransformColumnTypes(#"Expanded included.attributes.content.attributes",{{"data.type", type text}, {"data.id", type text}, {"data.attributes.title", type text}, {"data.attributes.last-update", type datetimezone}, {"data.attributes.description", type text}, {"data.meta.cache-control.cache", type text}, {"data.meta.cache-control.expireAt", type datetime}, {"included.type", type text}, {"included.id", type text}, {"included.attributes.title", type text}, {"included.attributes.last-update", type datetimezone}, {"included.attributes.description", type text}, {"included.attributes.magnitude", type any}, {"included.attributes.content.type", type text}, {"included.attributes.content.id", type text}, {"included.attributes.content.groupId", type text}, {"included.attributes.content.attributes.title", type text}, {"included.attributes.content.attributes.description", type text}, {"included.attributes.content.attributes.color", type text}, {"included.attributes.content.attributes.type", type text}, {"included.attributes.content.attributes.magnitude", type any}, {"included.attributes.content.attributes.composite", type logical}, {"included.attributes.content.attributes.last-update", type datetimezone}, {"included.attributes.content.attributes.values", type any}, {"included.attributes.content.attributes.total", type number}}),
 		    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"included.attributes.content.type", "included.attributes.content.id", "included.attributes.content.groupId", "included.attributes.content.attributes.color"}),
-		    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([included.attributes.content.id] <> "Demand at busbars" and [included.attributes.content.id] <> "Non-renewable" and [included.attributes.content.id] <> "Renewable")),
-		    #"Reordered Columns" = Table.ReorderColumns(#"Filtered Rows",{"included.attributes.content.id", "included.attributes.content.type", "included.attributes.content.groupId"}),
-		    #"Added Conditional Column" = Table.AddColumn(#"Reordered Columns", "CategoryId", each if [included.attributes.content.groupId] = "Renewable" then 1 else if [included.attributes.content.groupId] = "Non-renewable" then 2 else if [included.attributes.content.groupId] = "Demand at busbars" then 3 else null, type number),
+		    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", 
+		    each (
+		        [included.attributes.content.id] <> "Demanda en b.c." and 
+		        [included.attributes.content.id] <> "No-Renovable" and 
+		        [included.attributes.content.id] <> "Renovable" and 
+		        [included.attributes.content.id] <> "Demand at busbars" and
+		        [included.attributes.content.id] <> "Renewable" and 
+		        [included.attributes.content.id] <> "Non-renewable" and
+		        [included.attributes.content.id] <> "Almacenamiento")),
+		    #"Replaced Value" = Table.ReplaceValue(#"Filtered Rows","Renovable","Renewable",Replacer.ReplaceText,{"included.attributes.content.groupId"}),
+		    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Almacenamiento","Storage",Replacer.ReplaceText,{"included.attributes.content.groupId"}),
+		    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Demand at busbars","Exchange",Replacer.ReplaceText,{"included.attributes.content.groupId"}),
+		    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Consumo bombeo","Pumped storage consumption",Replacer.ReplaceText,{"included.attributes.content.type"}),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Replaced Value3",{"included.attributes.content.id", "included.attributes.content.type", "included.attributes.content.groupId"}),
+		    #"Added Conditional Column" = Table.AddColumn(#"Reordered Columns", "CategoryId", each if [included.attributes.content.groupId] = "Renewable" then 1 else if [included.attributes.content.groupId] = "Non-renewable" then 2 else if [included.attributes.content.groupId] = "Exchange" then 4 else if 
+		    [included.attributes.content.groupId] = "Storage" then 3 else null,
+		type number),
 		    #"Changed Type1" = Table.TransformColumnTypes(#"Added Conditional Column",{{"CategoryId", type text}}),
 		    #"Renamed Columns1" = Table.RenameColumns(#"Changed Type1",{{"included.attributes.content.type", "SourceTranslationEnglish"}, {"included.attributes.content.groupId", "CategoryTranslationEnglish"}, {"included.attributes.content.id", "SourceId"}, {"included.attributes.content.attributes.color", "Color"}}),
-		    #"Reordered Columns1" = Table.ReorderColumns(#"Renamed Columns1",{"SourceId", "Color", "SourceTranslationEnglish", "CategoryTranslationEnglish", "CategoryId"}),
-		    #"Appended Query" = Table.Combine({#"Reordered Columns1", #"Sources EN (1473)"})
+		    #"Reordered Columns1" = Table.ReorderColumns(#"Renamed Columns1",{"SourceId", "Color", "SourceTranslationEnglish", "CategoryTranslationEnglish", "CategoryId"})
 		in
-		    #"Appended Query"
+		    #"Reordered Columns1"
+		```
 	lineageTag: 863a2c23-4de7-48a7-9872-93eee49833e9
 	queryGroup: SourceGroup
 
@@ -118,7 +159,7 @@ expression 'Sources EN' =
 
 expression 'Sources PT' =
 		let
-		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("hZJNTsMwEIWvYmVLido0gXZdELAAJMqu6mISm8iS40F2nItwgogVi644gi/GOFBo1bosPe+befPj1SqZjLPZLBklt5Ib3zslK6DXk9DY+b4TKlmPBmg+ofC1/4wAeRGKLFGBYS/YYoeqhRg6/0Vb/2GaGFb8tIUiakt9ZRR+dK0By8xWlfY4Wwxh6zfc4X94ngf62ZlSaqj8O7ISmxJq0VD4gd7nhxkXQXKVEmCiUJGTtJCVQlZRQSrOMQbTbcKuFmA6kqPUNA8172ntRljGpbAkRf3Hf2MxYLXvbZyd7LC+Zx28YnQy2m8o7d+U+B7N2dZvSGZn7OaEC+VNw5BYCzMs+gSY7x1Qh6vsX/H4HJfZYKCtayhNNLunvBINaA5DNK3SbUZwWoLiyO5SJnUrDP0CiRoGm4Ok9Rc=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [SourceId = _t, SourceTranslationSpanish = _t, CategoryTranslationSpanish = _t]),
+		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("hZG9TsMwEMdfxcpcUJOmtB1RVYkOgETZqg6XxESWHB86Jxl4m8DEwMQj+MU4m/JRUZfNvvvd1/+/3SbpOJvPk1FypSpyQ6dVCfy7kwZ7N/RSJ7tRgBYph1fuPQLkU99kgxpIPGCLPeoWYujiG23dKzUxbLpfC2V0LO+Vcfi2awmsoK+sssfZaQhb91Z1+B+e556+76hQBkr3gqLApoBaNhy+pAaepAm/PX3B4Zuu1BLIv7jg7O9JOaeWqtQoSm7GjSuMweyL12kJ1HM6Sk1y3/OaJSdpRaWk5VR0/vjnJAGidoONs+kv1g2ih0eMXsbaTvyyWEsKYp0A8wMTjFf20Inj+8yyMMDYruEy2Zy2Y+anbEBXKNbnQplWEruo0EAYsfaB0j2zBxgqsnTutVmZlmQNogDOKzjSmsH005Y4tvsA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [SourceId = _t, SourceTranslationSpanish = _t, CategoryTranslationSpanish = _t]),
 		    #"Changed Type" = Table.TransformColumnTypes(Source,{{"SourceId", type text}, {"SourceTranslationSpanish", type text}, {"CategoryTranslationSpanish", type text}})
 		in
 		    #"Changed Type"
@@ -256,11 +297,9 @@ expression 'Sources ES (1473)' =
 		    #"Expanded included.attributes.content.attributes" = Table.ExpandRecordColumn(#"Expanded included.attributes.content1", "included.attributes.content.attributes", {"title", "description", "color", "type", "magnitude", "composite", "last-update", "values", "total"}, {"included.attributes.content.attributes.title", "included.attributes.content.attributes.description", "included.attributes.content.attributes.color", "included.attributes.content.attributes.type", "included.attributes.content.attributes.magnitude", "included.attributes.content.attributes.composite", "included.attributes.content.attributes.last-update", "included.attributes.content.attributes.values", "included.attributes.content.attributes.total"}),
 		    #"Changed Type" = Table.TransformColumnTypes(#"Expanded included.attributes.content.attributes",{{"data.type", type text}, {"data.id", type text}, {"data.attributes.title", type text}, {"data.attributes.last-update", type datetimezone}, {"data.attributes.description", type text}, {"data.meta.cache-control.cache", type text}, {"data.meta.cache-control.expireAt", type datetime}, {"included.type", type text}, {"included.id", type text}, {"included.attributes.title", type text}, {"included.attributes.last-update", type datetimezone}, {"included.attributes.description", type text}, {"included.attributes.magnitude", type any}, {"included.attributes.content.type", type text}, {"included.attributes.content.id", type text}, {"included.attributes.content.groupId", type text}, {"included.attributes.content.attributes.title", type text}, {"included.attributes.content.attributes.description", type text}, {"included.attributes.content.attributes.color", type text}, {"included.attributes.content.attributes.type", type text}, {"included.attributes.content.attributes.magnitude", type any}, {"included.attributes.content.attributes.composite", type logical}, {"included.attributes.content.attributes.last-update", type datetimezone}, {"included.attributes.content.attributes.values", type any}, {"included.attributes.content.attributes.total", type number}}),
 		    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"included.attributes.content.type","included.attributes.content.groupId", "included.attributes.content.id" }),
-		    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([included.attributes.content.id] <> "Demanda en b.c." and [included.attributes.content.id] <> "No-Renovable" and [included.attributes.content.id] <> "Renovable")),
-		    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows",{{"included.attributes.content.type", "SourceTranslationSpanish"}, {"included.attributes.content.groupId", "CategoryTranslationSpanish"}, {"included.attributes.content.id", "SourceId"}}),
-		    #"Removed Top Rows" = Table.Skip(#"Renamed Columns",10)
+		    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([included.attributes.content.id] = "1473"))
 		in
-		    #"Removed Top Rows"
+		    #"Filtered Rows"
 	lineageTag: f81edb52-92dd-4ab5-8d37-8b0e25588c7f
 	queryGroup: SourceGroup
 
@@ -284,14 +323,9 @@ expression 'Sources EN (1473)' =
 		    #"Expanded included.attributes.content.attributes" = Table.ExpandRecordColumn(#"Expanded included.attributes.content1", "included.attributes.content.attributes", {"title", "description", "color", "type", "magnitude", "composite", "last-update", "values", "total"}, {"included.attributes.content.attributes.title", "included.attributes.content.attributes.description", "included.attributes.content.attributes.color", "included.attributes.content.attributes.type", "included.attributes.content.attributes.magnitude", "included.attributes.content.attributes.composite", "included.attributes.content.attributes.last-update", "included.attributes.content.attributes.values", "included.attributes.content.attributes.total"}),
 		    #"Changed Type" = Table.TransformColumnTypes(#"Expanded included.attributes.content.attributes",{{"data.type", type text}, {"data.id", type text}, {"data.attributes.title", type text}, {"data.attributes.last-update", type datetimezone}, {"data.attributes.description", type text}, {"data.meta.cache-control.cache", type text}, {"data.meta.cache-control.expireAt", type datetime}, {"included.type", type text}, {"included.id", type text}, {"included.attributes.title", type text}, {"included.attributes.last-update", type datetimezone}, {"included.attributes.description", type text}, {"included.attributes.magnitude", type any}, {"included.attributes.content.type", type text}, {"included.attributes.content.id", type text}, {"included.attributes.content.groupId", type text}, {"included.attributes.content.attributes.title", type text}, {"included.attributes.content.attributes.description", type text}, {"included.attributes.content.attributes.color", type text}, {"included.attributes.content.attributes.type", type text}, {"included.attributes.content.attributes.magnitude", type any}, {"included.attributes.content.attributes.composite", type logical}, {"included.attributes.content.attributes.last-update", type datetimezone}, {"included.attributes.content.attributes.values", type any}, {"included.attributes.content.attributes.total", type number}}),
 		    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"included.attributes.content.type", "included.attributes.content.id", "included.attributes.content.groupId", "included.attributes.content.attributes.color"}),
-		    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([included.attributes.content.id] <> "Demand at busbars" and [included.attributes.content.id] <> "Non-renewable" and [included.attributes.content.id] <> "Renewable")),
-		    #"Reordered Columns" = Table.ReorderColumns(#"Filtered Rows",{"included.attributes.content.id", "included.attributes.content.type", "included.attributes.content.groupId"}),
-		    #"Added Conditional Column" = Table.AddColumn(#"Reordered Columns", "CategoryId", each if [included.attributes.content.groupId] = "Renewable" then 1 else if [included.attributes.content.groupId] = "Non-renewable" then 2 else if [included.attributes.content.groupId] = "Demand at busbars" then 3 else null, type number),
-		    #"Changed Type1" = Table.TransformColumnTypes(#"Added Conditional Column",{{"CategoryId", type text}}),
-		    #"Renamed Columns1" = Table.RenameColumns(#"Changed Type1",{{"included.attributes.content.type", "SourceTranslationEnglish"}, {"included.attributes.content.groupId", "CategoryTranslationEnglish"}, {"included.attributes.content.id", "SourceId"}, {"included.attributes.content.attributes.color", "Color"}}),
-		    #"Removed Top Rows" = Table.Skip(#"Renamed Columns1",10)
+		    #"Filtered Rows2" = Table.SelectRows(#"Removed Other Columns", each ([included.attributes.content.id] = "1473"))
 		in
-		    #"Removed Top Rows"
+		    #"Filtered Rows2"
 	lineageTag: 07950d2f-722f-4532-8617-d5d113712115
 	queryGroup: SourceGroup
 
@@ -310,7 +344,7 @@ expression fact_capacity_23_to_lastyear = ```
 		                    Query = 
 		                    [
 		                        start_date = "2023-01-01T00:00",
-		                        end_date= DateTime.ToText(Date.AddDays(Date.StartOfYear(DateTime.LocalNow()),-1),[Format="yyyy-MM-dd'T'HH:mm:ss'Z'", Culture="en-US"]),
+		                        end_date= DateTime.ToText(Date.EndOfYear(DateTime.LocalNow()),[Format="yyyy-MM-dd'T'HH:mm:ss'Z'", Culture="en-US"]),
 		                        time_trunc= "year"                        
 		                    ]
 		                    
@@ -435,7 +469,7 @@ expression 'Region Colours' =
 
 expression 'Source Colours' =
 		let
-		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("TdBBEoMgDAXQu9BtFwmEEJYR5BKOizqO9z9CaxQsyzef8MOyOAQv4t7uBZBhR7e+zTKexseGSJdRtFibZQbolI0wspdO8SQvKYiOYf401VKpDLMcR4kY7qtkRKpaYye2B8qUnhp0Umw8ce3DxHp4jcx3DAJZTqpybv0qWI/2v4HtmUqe9almsWJnWLC6mtsEw+wFtnOPS7YpHYLb3omu32WQT6dw/dEW9h+tXw==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [SourceId = _t, Color = _t])
+		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("TdBBEoMwCAXQu9htF5AQJEuM5hJOF804vf8RWr9Gm+UbAh/WdWAKZsNzeBBl2nh4PWGZd9NPY5bDJKGsLrYQdcogThqsU9op2BjNr2ZhN/cyS7kMdZoscTy/CkjcfU6dFAPKNN4xZKdUddK5NzPkCJ5UzzKKgjqbXXPtXwk56v8G2HMsefE7GsoK3mURcT3XiS7DBMU7243YVD7Gbeskx3WV7N0pHjdqcTsosGEmxd/ZWidEI2vh/ev1+gI=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [SourceId = _t, Color = _t])
 		in
 		    Source
 	lineageTag: 36c79c8e-1bed-4c11-89df-2b6d7b0ed469
@@ -447,11 +481,39 @@ expression 'Source Colours' =
 
 expression 'Sort Source' =
 		let
-		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("Pc/BEQAhCAPAXnz7EEGFWhz7b+OIJzx3IhD3LiSrl1qonHohjv4whoMDzSE/WjdEIyJyzIywYj2xQPoeCqYsH97DLZYYRBHqZTZRiHOSwSyjN802uEgzTk5o5SSqkibxKbL4PNZ2L3Q+", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [SourceId = _t, order = _t]),
+		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("Pc/BFcAgCAPQXTz3YBAVZ+nr/muUqHD8LwLxfQt0SnkKyvdsqEMuene0QHXoQZXFqEcEx8iIK+ZVU8ruQ+XUyof7cI0li0KEtplNjGo52cgsYzvNNryIEScHNXOSVWFJfgorPs+1cgoJjJkgxEHxPt8P", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [SourceId = _t, order = _t]),
 		    #"Changed Type" = Table.TransformColumnTypes(Source,{{"order", Int64.Type}})
 		in
 		    #"Changed Type"
 	lineageTag: d31bb228-c585-4517-b58c-f71ab19f664d
+	queryGroup: SourceGroup
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Sources ES (2)' =
+		let
+		    Source = Json.Document(Web.Contents("https://apidatos.ree.es/es/datos/balance/balance-electrico?start_date=2025-01-01T00:00&end_date=2025-12-31T23:59&time_trunc=day")),
+		    #"Converted to Table" = Table.FromRecords({Source}),
+		    #"Expanded data" = Table.ExpandRecordColumn(#"Converted to Table", "data", {"type", "id", "attributes", "meta"}, {"data.type", "data.id", "data.attributes", "data.meta"}),
+		    #"Expanded data.attributes" = Table.ExpandRecordColumn(#"Expanded data", "data.attributes", {"title", "last-update", "description"}, {"data.attributes.title", "data.attributes.last-update", "data.attributes.description"}),
+		    #"Expanded data.meta" = Table.ExpandRecordColumn(#"Expanded data.attributes", "data.meta", {"cache-control"}, {"data.meta.cache-control"}),
+		    #"Expanded data.meta.cache-control" = Table.ExpandRecordColumn(#"Expanded data.meta", "data.meta.cache-control", {"cache", "expireAt"}, {"data.meta.cache-control.cache", "data.meta.cache-control.expireAt"}),
+		    #"Expanded included" = Table.ExpandListColumn(#"Expanded data.meta.cache-control", "included"),
+		    #"Expanded included1" = Table.ExpandRecordColumn(#"Expanded included", "included", {"type", "id", "attributes"}, {"included.type", "included.id", "included.attributes"}),
+		    #"Expanded included.attributes" = Table.ExpandRecordColumn(#"Expanded included1", "included.attributes", {"title", "last-update", "description", "magnitude", "content"}, {"included.attributes.title", "included.attributes.last-update", "included.attributes.description", "included.attributes.magnitude", "included.attributes.content"}),
+		    #"Expanded included.attributes.content" = Table.ExpandListColumn(#"Expanded included.attributes", "included.attributes.content"),
+		    #"Expanded included.attributes.content1" = Table.ExpandRecordColumn(#"Expanded included.attributes.content", "included.attributes.content", {"type", "id", "groupId", "attributes"}, {"included.attributes.content.type", "included.attributes.content.id", "included.attributes.content.groupId", "included.attributes.content.attributes"}),
+		    #"Expanded included.attributes.content.attributes" = Table.ExpandRecordColumn(#"Expanded included.attributes.content1", "included.attributes.content.attributes", {"title", "description", "color", "type", "magnitude", "composite", "last-update", "values", "total"}, {"included.attributes.content.attributes.title", "included.attributes.content.attributes.description", "included.attributes.content.attributes.color", "included.attributes.content.attributes.type", "included.attributes.content.attributes.magnitude", "included.attributes.content.attributes.composite", "included.attributes.content.attributes.last-update", "included.attributes.content.attributes.values", "included.attributes.content.attributes.total"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Expanded included.attributes.content.attributes",{{"data.type", type text}, {"data.id", type text}, {"data.attributes.title", type text}, {"data.attributes.last-update", type datetimezone}, {"data.attributes.description", type text}, {"data.meta.cache-control.cache", type text}, {"data.meta.cache-control.expireAt", type datetime}, {"included.type", type text}, {"included.id", type text}, {"included.attributes.title", type text}, {"included.attributes.last-update", type datetimezone}, {"included.attributes.description", type text}, {"included.attributes.magnitude", type any}, {"included.attributes.content.type", type text}, {"included.attributes.content.id", type text}, {"included.attributes.content.groupId", type text}, {"included.attributes.content.attributes.title", type text}, {"included.attributes.content.attributes.description", type text}, {"included.attributes.content.attributes.color", type text}, {"included.attributes.content.attributes.type", type text}, {"included.attributes.content.attributes.magnitude", type any}, {"included.attributes.content.attributes.composite", type logical}, {"included.attributes.content.attributes.last-update", type datetimezone}, {"included.attributes.content.attributes.values", type any}, {"included.attributes.content.attributes.total", type number}}),
+		    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"included.attributes.content.type","included.attributes.content.groupId", "included.attributes.content.id" }),
+		    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([included.attributes.content.id] <> "Demanda en b.c." and [included.attributes.content.id] <> "No-Renovable" and [included.attributes.content.id] <> "Renovable" and [included.attributes.content.id] <> "Almacenamiento")),
+		    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows",{{"included.attributes.content.type", "SourceTranslationSpanish"}, {"included.attributes.content.groupId", "CategoryTranslationSpanish"}, {"included.attributes.content.id", "SourceId"}}),
+		    #"Appended Query" = Table.Combine({#"Renamed Columns", #"Sources ES (1473)"})
+		in
+		    #"Appended Query"
+	lineageTag: 105b69c3-4865-4e52-b412-94e1ae6b010f
 	queryGroup: SourceGroup
 
 	annotation PBI_NavigationStepName = Navigation

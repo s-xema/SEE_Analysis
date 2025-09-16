@@ -2048,7 +2048,7 @@ table 'Measures Table'
 			    ),
 			    CALCULATE(
 			        [Power (MW)],
-			        'Calendar'[Year] = (YEAR(TODAY())-2)
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
 			    ) 
 			)
 			
@@ -2075,7 +2075,7 @@ table 'Measures Table'
 			    ),
 			    CALCULATE(
 			        [Power (MW)],
-			        'Calendar'[Year] = YEAR(TODAY())-1
+			        'Calendar'[Year] = YEAR(TODAY())
 			    ) 
 			)
 			
@@ -2102,7 +2102,7 @@ table 'Measures Table'
 			    ),
 			    CALCULATE(
 			        [Power (MW)],
-			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			        'Calendar'[Year] = (YEAR(TODAY()))
 			    ) 
 			)
 			
@@ -2129,7 +2129,7 @@ table 'Measures Table'
 			    ),
 			    CALCULATE(
 			        [Power (MW)],
-			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			        'Calendar'[Year] = (YEAR(TODAY()))
 			    ) 
 			)
 			
@@ -2156,7 +2156,7 @@ table 'Measures Table'
 			    ),
 			    CALCULATE(
 			        [Power (MW)],
-			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			        'Calendar'[Year] = (YEAR(TODAY()))
 			    ) 
 			)
 			
@@ -2189,7 +2189,7 @@ table 'Measures Table'
 			    ),
 			    CALCULATE(
 			        [Power (MW)],
-			        'Calendar'[Year] = YEAR(TODAY())-2
+			        'Calendar'[Year] = YEAR(TODAY())-1
 			    ) 
 			)
 			
@@ -2216,7 +2216,7 @@ table 'Measures Table'
 			    ),
 			    CALCULATE(
 			        [Power (MW)],
-			        'Calendar'[Year] = YEAR(TODAY())-2
+			        'Calendar'[Year] = YEAR(TODAY())-1
 			    ) 
 			)
 			
@@ -2243,7 +2243,7 @@ table 'Measures Table'
 			    ),
 			    CALCULATE(
 			        [Power (MW)],
-			        'Calendar'[Year] = YEAR(TODAY())-2
+			        'Calendar'[Year] = YEAR(TODAY())-1
 			    ) 
 			)
 			
@@ -2346,10 +2346,9 @@ table 'Measures Table'
 			        [Top 4 Power 2PY]
 			    )
 			)
+		formatString: 0.000
 		displayFolder: Card_Power\Top4
 		lineageTag: eff3c9d7-c0d5-4185-a44c-8175489724b3
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Top 3 Power YOY Label' = ```
 			

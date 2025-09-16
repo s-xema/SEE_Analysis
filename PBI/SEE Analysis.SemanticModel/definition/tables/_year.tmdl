@@ -1,0 +1,25 @@
+table _year
+	lineageTag: cc1ef840-e71a-4cf3-84d9-eaa7c357d5f3
+
+	column _year
+		dataType: string
+		lineageTag: 0268414b-ef07-4edd-bced-b368ad9b4b96
+		summarizeBy: none
+		sourceColumn: _year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _year = m
+		mode: import
+		queryGroup: SourceGroup
+		source = ```
+				let
+				    Source = Number.ToText(Date.Year(DateTime.LocalNow())) 
+				in
+				    Source
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
