@@ -28,7 +28,7 @@ annotation PBI_QueryOrder = ["fact_balance","Sources EN","balance2","Sources ES"
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_ProTooling = ["CalcGroup","DaxQueryView_Desktop"]
+annotation PBI_ProTooling = ["CalcGroup","DaxQueryView_Desktop","DevMode"]
 
 annotation TranslationsBuilder = Version:2.2-Updated:2024-07-11
 

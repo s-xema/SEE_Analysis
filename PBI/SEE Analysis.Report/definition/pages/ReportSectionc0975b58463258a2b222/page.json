@@ -1,0 +1,51 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "ReportSectionc0975b58463258a2b222",
+  "displayName": "Exchange",
+  "displayOption": "FitToPage",
+  "height": 850,
+  "width": 1480,
+  "objects": {
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 0,
+                    "Percent": -0.5
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "fc8245fee4807d5008b6",
+      "target": "c3ac0e4f466034a1c6c4",
+      "type": "DataFilter"
+    },
+    {
+      "source": "a91946f91b065ad430db",
+      "target": "c3ac0e4f466034a1c6c4",
+      "type": "DataFilter"
+    },
+    {
+      "source": "ca4aef04ce680bd0792e",
+      "target": "c3ac0e4f466034a1c6c4",
+      "type": "DataFilter"
+    },
+    {
+      "source": "d6ed0692c6551039bcc3",
+      "target": "c3ac0e4f466034a1c6c4",
+      "type": "DataFilter"
+    }
+  ]
+}

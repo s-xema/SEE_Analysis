@@ -1,0 +1,1975 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "f83ad897197f21d888dd",
+  "position": {
+    "x": 282.22222222222223,
+    "y": 324.44444444444446,
+    "z": 1000,
+    "height": 312.22222222222223,
+    "width": 1058.8888888888889
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Country"
+                    }
+                  },
+                  "Property": "CountryTranslationEnglish"
+                }
+              },
+              "queryRef": "Country.CountryTranslationEnglish",
+              "nativeQueryRef": "CountryTranslationEnglish",
+              "active": true
+            }
+          ],
+          "fieldParameters": [
+            {
+              "parameterExpr": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Translated Country Names"
+                    }
+                  },
+                  "Property": "Country"
+                }
+              },
+              "index": 0,
+              "length": 1
+            }
+          ]
+        },
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Calendar"
+                    }
+                  },
+                  "Property": "Year"
+                }
+              },
+              "queryRef": "Calendar.Year",
+              "nativeQueryRef": "Year",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measures Table"
+                    }
+                  },
+                  "Property": "Import Energy (GWh)"
+                }
+              },
+              "queryRef": "Measures Table.Import Energy (GWh)",
+              "nativeQueryRef": "Import",
+              "displayName": "Import"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measures Table"
+                    }
+                  },
+                  "Property": "Export Energy (GWh)"
+                }
+              },
+              "queryRef": "Measures Table.Export Energy (GWh)",
+              "nativeQueryRef": "Export",
+              "displayName": "Export"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measures Table"
+                    }
+                  },
+                  "Property": "Energy International Exchange (GWh)"
+                }
+              },
+              "queryRef": "Measures Table.Energy International Exchange (GWh)",
+              "nativeQueryRef": "Exchange ",
+              "displayName": "Exchange "
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Calendar"
+                  }
+                },
+                "Property": "Year"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "51.83098567922944D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Andorra'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "48.93464618606109D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Andorra'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "56.84863923257564D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'France'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "62.23925352916607D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'France'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "52.15101313952397D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Morocco'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "61.053246180061016D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Morocco'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "56.27564832768223D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Portugal'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "60.01365521158387D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Portugal'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "64.35043342219811D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "total": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Country"
+                        }
+                      },
+                      "Property": "CountryTranslationEnglish"
+                    }
+                  }
+                ]
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "68.3899108938229D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "total": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Country"
+                        }
+                      },
+                      "Property": "CountryTranslationEnglish"
+                    }
+                  }
+                ]
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "69.48445094156068D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'France'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65.91891601001117D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Andorra'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "64.9136436637486D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Morocco'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65.77019156841511D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Portugal'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "69.65283884521358D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "total": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Country"
+                        }
+                      },
+                      "Property": "CountryTranslationEnglish"
+                    }
+                  }
+                ]
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "71.32117686311078D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Morroco'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "64.40155373126444D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Morroco'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "70.5467669950166D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationEnglish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Morroco'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "69.75070113847104D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Calendar.Year"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "50D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Andorra'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "50D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Andorra'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Andorra'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "52D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Francia'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "57D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Francia'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Francia'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "50D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Marruecos'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "57D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Marruecos'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Marruecos'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "52D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Portugal'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "57D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Portugal'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationSpanish"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Portugal'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "59D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "total": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Country"
+                        }
+                      },
+                      "Property": "CountryTranslationSpanish"
+                    }
+                  }
+                ]
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "64D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "total": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Country"
+                        }
+                      },
+                      "Property": "CountryTranslationSpanish"
+                    }
+                  }
+                ]
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "67D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "total": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Country"
+                        }
+                      },
+                      "Property": "CountryTranslationSpanish"
+                    }
+                  }
+                ]
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "50D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Andorra'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "50D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Andorra'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Andorra'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "52D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'França'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "57D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'França'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'França'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "50D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Marrocos'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "57D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Marrocos'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Marrocos'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "52D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Portugal'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "57D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Portugal'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Country"
+                          }
+                        },
+                        "Property": "CountryTranslationPortuguese"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Portugal'"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "59D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "total": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Country"
+                        }
+                      },
+                      "Property": "CountryTranslationPortuguese"
+                    }
+                  }
+                ]
+              }
+            ],
+            "metadata": "Measures Table.Import Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "64D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "total": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Country"
+                        }
+                      },
+                      "Property": "CountryTranslationPortuguese"
+                    }
+                  }
+                ]
+              }
+            ],
+            "metadata": "Measures Table.Export Energy (GWh)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "67D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "total": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Country"
+                        }
+                      },
+                      "Property": "CountryTranslationPortuguese"
+                    }
+                  }
+                ]
+              }
+            ],
+            "metadata": "Measures Table.Energy International Exchange (GWh)"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measures Table"
+                    }
+                  },
+                  "Property": "Exchange Detail Title"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "17D"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            },
+            "background": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.1
+                    }
+                  }
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "parentGroupName": "5d181bc2a6abe25b5c9c"
+}

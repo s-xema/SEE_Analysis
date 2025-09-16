@@ -1,0 +1,52 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "32ea3a5644a7328ce593",
+  "position": {
+    "x": 10.726256983240225,
+    "y": 0,
+    "z": 0,
+    "height": 500.55865921787711,
+    "width": 337.87709497206708
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Source"
+                    }
+                  },
+                  "Property": "SourceId"
+                }
+              },
+              "queryRef": "Source.SourceId",
+              "nativeQueryRef": "SourceId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_balance"
+                    }
+                  },
+                  "Property": "SourceID"
+                }
+              },
+              "queryRef": "fact_balance.SourceID",
+              "nativeQueryRef": "SourceID"
+            }
+          ],
+          "showAll": true
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

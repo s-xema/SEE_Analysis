@@ -1,0 +1,70 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "dee99c05066e8bdbec83",
+  "position": {
+    "x": 1467.9837618403246,
+    "y": 492.66576454668473,
+    "z": 5000,
+    "height": 356.48173207036535,
+    "width": 12.016238159675236,
+    "tabOrder": 9001
+  },
+  "visual": {
+    "visualType": "multiRowCard",
+    "autoSelectVisualType": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measures Table"
+                    }
+                  },
+                  "Property": "Top 1 Region PY YTD"
+                }
+              },
+              "queryRef": "Measures Table.Top 1 Region PY YTD",
+              "nativeQueryRef": "Top 1 Region PY YTD"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measures Table"
+                    }
+                  },
+                  "Property": "Top 1 Region YTD"
+                }
+              },
+              "queryRef": "Measures Table.Top 1 Region YTD",
+              "nativeQueryRef": "Top 1 Region YTD"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Measures Table"
+                  }
+                },
+                "Property": "Top 1 Region PY YTD"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
