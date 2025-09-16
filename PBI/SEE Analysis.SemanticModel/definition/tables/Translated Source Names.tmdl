@@ -1,0 +1,59 @@
+table 'Translated Source Names'
+	lineageTag: 708fd026-4ac3-4d7b-a13d-22f69da41aac
+
+	column Source
+		lineageTag: 52400fc6-a1d3-4b79-8c70-8c45f66dcf68
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: SortOrder
+
+		relatedColumnDetails
+			groupByColumn: Fields
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fields
+		isHidden
+		lineageTag: 951d35ca-ec9d-49cb-8ce6-2551cc3e8665
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: SortOrder
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		isHidden
+		formatString: 0
+		lineageTag: cb75573e-b865-4cc9-a499-e3cc2c7351dd
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: 4e6da2ef-edcb-428f-adf7-82c99a0611bb
+		summarizeBy: none
+		sourceColumn: [Value4]
+		sortByColumn: SortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Translated Source Names' = calculated
+		mode: import
+		source = ```
+				{
+				    ("Energy Source", NAMEOF('Source'[SourceTranslationEnglish]), 0, "en"),
+				    ("Fuente de Energía", NAMEOF('Source'[SourceTranslationSpanish]), 1, "es"), 
+				    ("Fonte de Energia", NAMEOF('Source'[SourceTranslationPortuguese]), 2, "pt")
+				}
+				```
+
+	annotation PBI_Id = df6455ae04cf45ad95733d7dc9f65ed3
+

@@ -1,0 +1,69 @@
+table Languages
+	lineageTag: f7cc9f0e-c415-4d08-82b5-2a4f2131a60a
+
+	column Language
+		dataType: string
+		lineageTag: bcf632fd-747d-41ad-9fb0-d910e457c957
+		summarizeBy: none
+		sourceColumn: Language
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		dataType: string
+		lineageTag: 3372ff4a-0178-42b6-ad69-c03830fa4da6
+		summarizeBy: none
+		sourceColumn: LanguageID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column DefaultCulture
+		dataType: string
+		lineageTag: 650bb776-6c20-43ec-af49-2a1be089b5b4
+		summarizeBy: none
+		sourceColumn: DefaultCulture
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		dataType: int64
+		formatString: 0
+		lineageTag: 77524818-9fa7-4f17-a89a-a61c6df755eb
+		summarizeBy: sum
+		sourceColumn: SortOrder
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Languages = m
+		mode: import
+		source =
+				let
+				  LanguagesTable = #table(type table [
+				    Language = text,
+				    LanguageId = text,
+				    DefaultCulture = text,
+				    SortOrder = number
+				  ], {
+				    {"English", "en", "en-US", 1 },
+				    {"Spanish", "es", "es-ES", 2 },
+				    {"Portuguese", "pt", "pt-PT", 3 }
+				  //  {"German", "de", "de-DE", 4 }
+				  }),
+				  SortedRows = Table.Sort(LanguagesTable,{{"SortOrder", Order.Ascending}}),
+				  QueryOutput = Table.TransformColumnTypes(SortedRows,{{"SortOrder", Int64.Type}}),
+				    #"Renamed Columns" = Table.RenameColumns(QueryOutput,{{"LanguageId", "LanguageID"}})
+				in
+				  #"Renamed Columns"
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+

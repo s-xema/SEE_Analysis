@@ -1,0 +1,137 @@
+table Source
+	lineageTag: 4f70f467-74e0-40c2-86a6-2feef52d419e
+
+	column SourceId
+		dataType: string
+		lineageTag: 2c1edb19-dc82-433d-bcf6-fecd1bc1008b
+		summarizeBy: none
+		sourceColumn: SourceId
+		sortByColumn: Color
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceTranslationEnglish
+		dataType: string
+		lineageTag: b09efa34-7ee8-42c2-a50b-49a8d6a0aa7e
+		summarizeBy: none
+		sourceColumn: SourceTranslationEnglish
+		sortByColumn: order
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column CategoryTranslationEnglish
+		dataType: string
+		lineageTag: 53c77cc4-5cb9-4179-a9af-c2aa5a3111f0
+		summarizeBy: none
+		sourceColumn: CategoryTranslationEnglish
+		sortByColumn: CategoryId
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column CategoryId
+		dataType: string
+		lineageTag: 854cb77b-ae4d-4c2c-98f6-9faa716ab820
+		summarizeBy: none
+		sourceColumn: CategoryId
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceTranslationSpanish
+		dataType: string
+		lineageTag: 4e749b5c-bb1d-4138-90c4-ba115f6e06bd
+		summarizeBy: none
+		sourceColumn: SourceTranslationSpanish
+		sortByColumn: order
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column CategoryTranslationSpanish
+		dataType: string
+		lineageTag: 43e7498f-869b-455b-8c5d-b03ad9333389
+		summarizeBy: none
+		sourceColumn: CategoryTranslationSpanish
+		sortByColumn: CategoryId
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceTranslationPortuguese
+		dataType: string
+		lineageTag: 80c1f7b4-e922-4d5c-bbdf-adf72f6323cc
+		summarizeBy: none
+		sourceColumn: SourceTranslationPortuguese
+		sortByColumn: order
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column CategoryTranslationPortuguese
+		dataType: string
+		lineageTag: 12bbc5fa-dec3-4df3-a194-0d02a8206b4d
+		summarizeBy: none
+		sourceColumn: CategoryTranslationPortuguese
+		sortByColumn: CategoryId
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color
+		dataType: string
+		lineageTag: fd17dba5-8ced-4eb7-b998-c466ce245256
+		summarizeBy: none
+		sourceColumn: Color
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Color.1'
+		dataType: string
+		lineageTag: cece28ac-420e-4e05-944f-139a20e5a6d1
+		summarizeBy: none
+		sourceColumn: Color.1
+
+		annotation SummarizationSetBy = Automatic
+
+	column order
+		dataType: int64
+		formatString: 0
+		lineageTag: e29c9e2d-49b4-4d75-a818-a07839a676b1
+		summarizeBy: sum
+		sourceColumn: order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Source = m
+		mode: import
+		queryGroup: SourceGroup
+		source =
+				let
+				    Source = Table.NestedJoin(#"Sources EN", {"SourceId"}, #"Sources ES", {"SourceId"}, "Sources ES", JoinKind.LeftOuter),
+				    #"Expanded Sources ES" = Table.ExpandTableColumn(Source, "Sources ES", {"SourceTranslationSpanish", "CategoryTranslationSpanish"}, {"SourceTranslationSpanish", "CategoryTranslationSpanish"}),
+				    #"Merged Queries" = Table.NestedJoin(#"Expanded Sources ES", {"SourceId"}, #"Sources PT", {"SourceId"}, "Sources PT", JoinKind.LeftOuter),
+				    #"Expanded Sources PT" = Table.ExpandTableColumn(#"Merged Queries", "Sources PT", {"SourceTranslationSpanish", "CategoryTranslationSpanish"}, {"Sources PT.SourceTranslationSpanish", "Sources PT.CategoryTranslationSpanish"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Expanded Sources PT",{{"Sources PT.SourceTranslationSpanish", "SourceTranslationPortuguese"}, {"Sources PT.CategoryTranslationSpanish", "CategoryTranslationPortuguese"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns",null,"Ligação Península-Baleares",Replacer.ReplaceValue,{"SourceTranslationPortuguese"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value",null,"Demanda em b.c.",Replacer.ReplaceValue,{"CategoryTranslationPortuguese"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Demand at busbars","Other demands",Replacer.ReplaceText,{"CategoryTranslationEnglish"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Demanda en b.c.","Otras demandas",Replacer.ReplaceText,{"CategoryTranslationSpanish"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","Demanda em b.c.","Outras demandas",Replacer.ReplaceText,{"CategoryTranslationPortuguese"}),
+				    #"Merged Queries1" = Table.NestedJoin(#"Replaced Value4", {"SourceId"}, #"Source Colours", {"SourceId"}, "Source Colours", JoinKind.LeftOuter),
+				    #"Expanded Source Colours" = Table.ExpandTableColumn(#"Merged Queries1", "Source Colours", {"Color"}, {"Color.1"}),
+				    #"Merged Queries2" = Table.NestedJoin(#"Expanded Source Colours", {"SourceId"}, #"Sort Source", {"SourceId"}, "Sort Source", JoinKind.LeftOuter),
+				    #"Expanded Sort Source" = Table.ExpandTableColumn(#"Merged Queries2", "Sort Source", {"order"}, {"order"})
+				in
+				    #"Expanded Sort Source"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,329 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "JsonSource",
+            "formatSettings": {
+              "type": "JsonReadSettings"
+            },
+            "storeSettings": {
+              "type": "HttpReadSettings",
+              "requestMethod": "GET"
+            },
+            "datasetSettings": {
+              "type": "Json",
+              "typeProperties": {
+                "location": {
+                  "type": "HttpServerLocation",
+                  "relativeUrl": {
+                    "value": "@{concat(pipeline().parameters.category,'/', pipeline().parameters.widget, '?start_date=',variables('start_date'),'&end_date=',variables('final_date'),'&time_trunc=', pipeline().parameters.time_trunc)}",
+                    "type": "Expression"
+                  }
+                }
+              },
+              "schema": {},
+              "externalReferences": {
+                "connection": "5bc7d445-6b5c-4f6d-b472-85185e872007"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "JsonSink",
+            "formatSettings": {
+              "type": "JsonWriteSettings"
+            },
+            "storeSettings": {
+              "type": "LakehouseWriteSettings"
+            },
+            "datasetSettings": {
+              "type": "Json",
+              "typeProperties": {
+                "location": {
+                  "type": "LakehouseLocation",
+                  "folderPath": "balance",
+                  "fileName": "Temp_inter"
+                }
+              },
+              "schema": {},
+              "linkedService": {
+                "name": "LH_Balance_electrico",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "1d04b850-cdfb-b4d6-4fcb-6698163a4728",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Files"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "ExtractFromAPI",
+        "description": "Extract And Load Temp.json in LakeHouse",
+        "dependsOn": [
+          {
+            "activity": "Delete Previous Temp_inter",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delete",
+        "typeProperties": {
+          "enableLogging": false,
+          "datasetSettings": {
+            "type": "Binary",
+            "typeProperties": {
+              "location": {
+                "type": "LakehouseLocation",
+                "folderPath": "balance",
+                "fileName": "Temp_inter"
+              }
+            },
+            "linkedService": {
+              "name": "LH_Balance_electrico",
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "1d04b850-cdfb-b4d6-4fcb-6698163a4728",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Files"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "storeSettings": {
+            "type": "LakehouseReadSettings",
+            "recursive": true,
+            "enablePartitionDiscovery": false
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Delete Previous Temp_inter",
+        "dependsOn": [
+          {
+            "activity": "Set final_date",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "SELECT max([collectdate]) maxDate from [dbo].[log_info] where [tablename1] = 'fact_inter'",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "linkedService": {
+              "name": "DWH_Balance_electrico",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "480b8574-7b86-434f-acb5-0ea36ee3fe14",
+                  "endpoint": "gwtklgmkmwquvafrpm5qo4pjdm-az7hilevrpdenkbtmsiemdzchy.datawarehouse.pbidedicated.windows.net"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Last_date",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "start_date",
+          "value": {
+            "value": "@addToTime(activity('Last_date').output.firstRow.maxDate,1,'Day')\n",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set start_date",
+        "dependsOn": [
+          {
+            "activity": "Last_date",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "final_date",
+          "value": {
+            "value": "@subtractFromTime(startOfMonth(convertFromUtc(utcNow(),'Romance Standard Time')),1,'Minute')",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set final_date",
+        "dependsOn": [
+          {
+            "activity": "Set start_date",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Fail",
+        "typeProperties": {
+          "message": {
+            "value": "@concat('Error to get data from API dates from ', variables('final_date'), ' to ', variables('start_date'))",
+            "type": "Expression"
+          },
+          "errorCode": "502"
+        },
+        "name": "API_Data_Fail",
+        "dependsOn": [
+          {
+            "activity": "ExtractFromAPI",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[loaddatainter]"
+        },
+        "linkedService": {
+          "name": "DWH_Balance_electrico",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "480b8574-7b86-434f-acb5-0ea36ee3fe14",
+              "endpoint": "gwtklgmkmwquvafrpm5qo4pjdm-az7hilevrpdenkbtmsiemdzchy.datawarehouse.pbidedicated.windows.net"
+            },
+            "annotations": []
+          },
+          "objectId": "480b8574-7b86-434f-acb5-0ea36ee3fe14"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Load data into fact_inter",
+        "dependsOn": [
+          {
+            "activity": "Transform_Load",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "RefreshDataflow",
+        "typeProperties": {
+          "dataflowId": "724f8fb1-52ee-4db2-80c8-5546574c0d37",
+          "workspaceId": "2c747e06-8b95-46c6-a833-6490460f223e",
+          "notifyOption": "NoNotification"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Transform_Load",
+        "dependsOn": [
+          {
+            "activity": "ExtractFromAPI",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "start_date": {
+        "type": "String",
+        "defaultValue": "2022-01-01T00:00"
+      },
+      "end_date": {
+        "type": "String",
+        "defaultValue": "2022-01-31T23:59"
+      },
+      "time_trunc": {
+        "type": "String",
+        "defaultValue": "day"
+      },
+      "category": {
+        "type": "String",
+        "defaultValue": "intercambios"
+      },
+      "widget": {
+        "type": "String",
+        "defaultValue": "todas-fronteras-fisicos"
+      }
+    },
+    "variables": {
+      "start_date": {
+        "type": "String"
+      },
+      "final_date": {
+        "type": "String"
+      }
+    },
+    "annotations": []
+  }
+}

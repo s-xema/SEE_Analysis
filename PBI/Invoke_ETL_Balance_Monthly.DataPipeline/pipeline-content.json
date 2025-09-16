@@ -1,0 +1,64 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "value": "@equals(dayOfMonth(utcNow()), 15)",
+            "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "ExecutePipeline",
+              "typeProperties": {
+                "pipeline": {
+                  "referenceName": "5c1c5c9f-3fdb-82e6-4cb9-a92f5fe39ab0",
+                  "type": "PipelineReference"
+                },
+                "parameters": {},
+                "waitOnCompletion": true
+              },
+              "name": "Invoke ETL_Balance",
+              "dependsOn": []
+            }
+          ],
+          "ifFalseActivities": []
+        },
+        "name": "If Condition1",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "start_date": {
+        "type": "String",
+        "defaultValue": "2022-01-01T00:00"
+      },
+      "end_date": {
+        "type": "String",
+        "defaultValue": "2022-01-31T23:59"
+      },
+      "time_trunc": {
+        "type": "String",
+        "defaultValue": "day"
+      },
+      "category": {
+        "type": "String",
+        "defaultValue": "balance"
+      },
+      "widget": {
+        "type": "String",
+        "defaultValue": "balance-electrico"
+      }
+    },
+    "variables": {
+      "start_date": {
+        "type": "String"
+      },
+      "final_date": {
+        "type": "String"
+      }
+    },
+    "annotations": []
+  }
+}

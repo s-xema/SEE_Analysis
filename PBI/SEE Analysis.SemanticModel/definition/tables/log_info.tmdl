@@ -1,0 +1,38 @@
+table log_info
+	lineageTag: 46d48529-d12d-44d0-b026-cd58f14191b4
+
+	column tablename1
+		dataType: string
+		lineageTag: 2020d137-580c-4c7f-a170-0e045c74556e
+		summarizeBy: none
+		sourceColumn: tablename1
+
+		annotation SummarizationSetBy = Automatic
+
+	column MaxDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4bb8a907-5b5a-4224-8198-797935548313
+		summarizeBy: none
+		sourceColumn: MaxDate
+
+		variation Variation
+			isDefault
+			relationship: 15c912b7-4fd5-4edb-bd01-1231642a69c4
+			defaultHierarchy: LocalDateTable_62ade089-efe7-4d45-956a-a8051e7c6852.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition log_info = m
+		mode: import
+		queryGroup: FactGroup
+		source =
+				let
+				    Source = Sql.Database("gwtklgmkmwquvafrpm5qo4pjdm-az7hilevrpdenkbtmsiemdzchy.datawarehouse.pbidedicated.windows.net", "DWH_Balance_electrico"),
+				    dbo = Source{[Schema="dbo",Item="log_info"]}[Data],
+				    #"Grouped Rows" = Table.Group(dbo, {"tablename1"}, {{"MaxDate", each List.Max([collectdate]), type nullable datetime}})
+				in
+				    #"Grouped Rows"
+
+	annotation PBI_ResultType = Table
+

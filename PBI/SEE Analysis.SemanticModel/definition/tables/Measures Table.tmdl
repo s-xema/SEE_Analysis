@@ -1,0 +1,3602 @@
+table 'Measures Table'
+	lineageTag: dca9498a-703f-49e9-9498-659d309a4b4d
+
+	measure 'Demand (GWh)' = SUM(fact_balance[Energy])/1000
+		formatString: #,0
+		displayFolder: Basics
+		lineageTag: 00e8d68c-f98a-4587-ac7e-437ba5ac86e2
+
+	measure 'Energy 2018 (GWh)' = CALCULATE(SUM(fact_balance[Energy]), 'Calendar'[Year] = 2018)
+		formatString: #,0
+		displayFolder: Auxiliar
+		lineageTag: 8b9ec17e-e4e9-4a97-9928-68ae67f24f09
+
+	measure 'Energy 2019 (GWh)' = CALCULATE(SUM(fact_balance[Energy]), 'Calendar'[Year] = 2019)
+		formatString: #,0
+		displayFolder: Auxiliar
+		lineageTag: e160fe83-d0a4-41f4-8b8a-8bd69980c1bb
+
+	measure 'Energy 2020 (GWh)' = CALCULATE(SUM(fact_balance[Energy]), 'Calendar'[Year] = 2020)
+		formatString: #,0
+		displayFolder: Auxiliar
+		lineageTag: f9c64af4-0b3f-4f59-af0b-9074c4b343f7
+
+	measure 'Energy 2021 (GWh)' = CALCULATE(SUM(fact_balance[Energy]), 'Calendar'[Year] = 2021)
+		formatString: #,0
+		displayFolder: Auxiliar
+		lineageTag: 84869793-db2b-4ec8-a494-4b93f04e72b2
+
+	measure 'Energy 2022 (GWh)' = CALCULATE(SUM(fact_balance[Energy]), 'Calendar'[Year] = 2022)
+		formatString: #,0
+		displayFolder: Auxiliar
+		lineageTag: 9f87551d-a9a0-4519-8923-42f13e2fb329
+
+	measure 'Renewable (GWh)' = CALCULATE([Demand (GWh)], Source[CategoryId] = "1")
+		formatString: #,0
+		displayFolder: Basics
+		lineageTag: b4540b03-ce81-415e-a54b-c7fdb154931e
+
+	measure 'Non-Renewable (GWh)' = CALCULATE([Demand (GWh)], Source[CategoryId] = "2")
+		formatString: #,0
+		displayFolder: Basics
+		lineageTag: 2ecd6816-baaa-4321-b434-92b111941de7
+
+	measure 'Generation (GWh)' = CALCULATE([Demand (GWh)], (Source[CategoryId] = "2" || Source[CategoryId] = "1") )
+		formatString: #,0
+		displayFolder: Basics
+		lineageTag: be4ac356-26a5-4513-a6d9-f37711a6e040
+
+	measure 'Balance Last Update' = CALCULATE(LASTDATE(fact_balance[Date]) , ALL('Calendar'))
+		displayFolder: LastUpdate
+		lineageTag: 26758a36-3ac6-4655-be7a-e08eb3554106
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MonthLastUpdate (Balance)' =
+			MONTH(
+					CALCULATE(
+						LASTDATE(fact_balance[Date]),
+						ALL('Calendar')
+					)
+				)
+		displayFolder: LastUpdate
+		lineageTag: 4135bc74-ddd8-465d-8487-3701de26fab9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure isfiltered = ```
+			HASONEFILTER('Calendar'[Year]) &&
+					( 
+					NOT (ISFILTERED('Calendar'[MonthNameEN])|| ISFILTERED('Calendar'[MonthNameES]) || ISFILTERED('Calendar'[MonthNamePT]))
+					 
+					)
+			```
+		isHidden
+		displayFolder: Auxiliar
+		lineageTag: db97b9bf-d5f2-4f49-a811-4a709a0e529d
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Inter Last Update' = CALCULATE(LASTDATE(fact_inter[Date]) , ALL('Calendar'))
+		displayFolder: LastUpdate
+		lineageTag: d7b2049f-c763-4eed-a4c4-90fa3e7716ea
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'CCAA Last Update' = CALCULATE(LASTDATE(fact_ccaa[Date]) , ALL('Calendar'))
+		displayFolder: LastUpdate
+		lineageTag: c38a98bf-d87d-4fc9-8018-eaadea99d93e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MonthLastUpdate (Inter)' =
+			MONTH(
+					CALCULATE(
+						LASTDATE(fact_inter[Date]),
+						ALL('Calendar')
+					)
+				)
+		displayFolder: LastUpdate
+		lineageTag: 2ceebe6c-f1ca-4f01-a26c-5272d34f3495
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MonthLastUpdate (CCAA)' =
+			MONTH(
+					CALCULATE(
+						LASTDATE(fact_ccaa[Date]),
+						ALL('Calendar')
+					)
+				)
+		displayFolder: LastUpdate
+		lineageTag: 10a69e42-29c8-4fbd-9d15-925c531a8beb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Energy Balance each Year to Month Last Update' =
+			IF(
+					HASONEFILTER('Calendar'[Year]) &&
+					NOT (ISFILTERED('Calendar'[MonthNameEN])|| ISFILTERED('Calendar'[MonthNameES]) || ISFILTERED('Calendar'[MonthNamePT])),
+					CALCULATE(
+						SUM('fact_balance'[Energy]) / 1000000,
+						FILTER(
+							'Calendar',
+							MONTH('Calendar'[Date]) <= [MonthLastUpdate (Balance)]
+						)
+					)
+				)
+		formatString: #,0
+		displayFolder: Auxiliar
+		lineageTag: a559e0c0-f9c5-4007-91ac-792e475302f3
+
+	measure 'Energy Inter each Year to Month Last Update' =
+			IF(
+					HASONEFILTER('Calendar'[Year]) &&
+					NOT (ISFILTERED('Calendar'[MonthNameEN])|| ISFILTERED('Calendar'[MonthNameES]) || ISFILTERED('Calendar'[MonthNamePT])),
+					CALCULATE(
+						SUM(fact_inter[Energy]) / 1000000,
+						FILTER(
+							'Calendar',
+							MONTH('Calendar'[Date]) <= [MonthLastUpdate (Inter)]
+						)
+					)
+				)
+		formatString: #,0
+		displayFolder: Auxiliar
+		lineageTag: c3cf6b57-acae-4e49-b65e-738fa4dd31dd
+
+	measure 'Energy CCAA each Year to Month Last Update' =
+			IF(
+					HASONEFILTER('Calendar'[Year]) &&
+					NOT (ISFILTERED('Calendar'[MonthNameEN])|| ISFILTERED('Calendar'[MonthNameES]) || ISFILTERED('Calendar'[MonthNamePT])),
+					CALCULATE(
+						SUM(fact_ccaa[Energy]) / 1000,
+						FILTER(
+							'Calendar',
+							MONTH('Calendar'[Date]) <= [MonthLastUpdate (CCAA)]
+						)
+					)
+				)
+		formatString: #,0
+		displayFolder: CCAA
+		lineageTag: e97b6bf9-f54e-413b-a406-e24884eb734f
+
+	measure 'Energy International Exchange (GWh)' = SUM(fact_inter[Energy])/1000
+		formatString: #,0
+		displayFolder: Inter
+		lineageTag: f54cf3c8-6083-4321-85a0-5612215d9f63
+
+	measure 'Energy CCAA (GWh)' = SUM(fact_ccaa[Energy])/1000
+		formatString: #,0
+		displayFolder: CCAA
+		lineageTag: 0efad009-2843-4df4-b7eb-b175850407e0
+
+	measure 'Energy Int Check' = CALCULATE(SUM(fact_balance[Energy]), Source [sourceId] = "1474")/1000000
+		formatString: 0.#0K; -0.#0K
+		isHidden
+		displayFolder: Auxiliar
+		lineageTag: c22c1d9d-c2d5-426f-9b6b-abe867e47b53
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure Hydro =
+			CALCULATE(
+			    [Demand (GWh)],
+			    Source[SourceId] = "10288"
+			    )
+		formatString: #,0
+		displayFolder: Sources
+		lineageTag: 3be90468-d2c6-41cf-b940-174ca7327868
+
+	measure 'Solar Photovoltaic' =
+			CALCULATE(
+			    [Demand (GWh)],
+			    Source[SourceId] = "1458"
+			    )
+		formatString: #,0
+		displayFolder: Sources
+		lineageTag: fef58423-ae9a-4d81-9160-0bec7c765850
+
+	measure Wind =
+			CALCULATE(
+			    [Demand (GWh)],
+			    Source[SourceId] = "10291"
+			    )
+		formatString: #,0
+		displayFolder: Sources
+		lineageTag: 415a2459-e9eb-47a5-a597-d3b272e41534
+
+	measure Nuclear =
+			CALCULATE(
+			    [Demand (GWh)],
+			    Source[SourceId] = "1446"
+			    )
+		formatString: #,0
+		displayFolder: Sources
+		lineageTag: ca2917af-ac6f-41b4-909b-1518db76d814
+
+	measure 'Combinated Cycle' =
+			CALCULATE(
+			    [Demand (GWh)],
+			    Source[SourceId] = "1454"
+			    )
+		formatString: #,0
+		displayFolder: Sources
+		lineageTag: 65491479-5f4d-46d1-8b2f-5e53d07e3798
+
+	measure Coal =
+			CALCULATE(
+			    [Demand (GWh)],
+			    Source[SourceId] = "10289"
+			    )
+		formatString: #,0
+		displayFolder: Sources
+		lineageTag: 870172de-9669-4499-8a2f-faf6fa04d877
+
+	measure Cogeneration =
+			CALCULATE(
+			    [Demand (GWh)],
+			    Source[SourceId] = "10293"
+			    )
+		formatString: #,0
+		displayFolder: Sources
+		lineageTag: f3010a17-4a72-493b-a65d-8356b7a3dc04
+
+	measure 'Thermal Solar' =
+			CALCULATE(
+			    [Demand (GWh)],
+			    Source[SourceId] = "1459"
+			    )
+		formatString: #,0
+		displayFolder: Sources
+		lineageTag: 0aad96d1-a517-4309-bdba-8e4bc7086589
+
+	measure 'Power (MW)' = SUM(fact_capacity[Power])
+		formatString: #,0
+		displayFolder: Capacity
+		lineageTag: 0806e386-8df5-4282-95bf-c8369c994d19
+
+	measure Ratio =
+			DIVIDE(
+					[Power (MW)],
+					CALCULATE(
+						[Power (MW)],
+						ALL(Source)
+					)
+				)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Capacity
+		lineageTag: 50cc30f3-c6a2-415d-a55f-d8e573fe0b60
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Category Ratio' = ```
+			
+			IF(
+			    HASONEVALUE(Source[CategoryTranslationEnglish]),
+			    DIVIDE(
+					[Demand (GWh)],
+					CALCULATE(
+						[Demand (GWh)],
+						ALL(Source)
+					)
+				)
+			)
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Ratios
+		lineageTag: b767d881-c300-4790-8b7a-17a862640b09
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Energy Top 4 Renewable Sources (GWh)' = ```
+			CALCULATE(
+					[Generation (GWh)],
+			        KEEPFILTERS(
+			            TOPN(4,
+			                FILTER(
+			                    ALL(Source),
+			                    Source[CategoryId] = "1"
+			                ), 
+			                [Total Generation]
+			            )
+					)
+			    )
+			```
+		formatString: #,0
+		displayFolder: TOPN
+		lineageTag: 1651cae6-9bcc-42d6-a1f8-db04a2b12b44
+
+	measure 'Ranking Source Non-Renewable' = RANK(FILTER(ALL(Source),Source[CategoryId] = "2"), ORDERBY([Total CCAA Energy],DESC))
+		displayFolder: TOPN
+		lineageTag: c3d42099-41aa-4f9c-9cb6-6455bbd32546
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ranking Source' = RANK(ALL(Source), ORDERBY([Total Generation],DESC))
+		displayFolder: TOPN
+		lineageTag: 112a92ed-3d23-40d6-ab69-51174b5c4ac2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ranking Source Renewable' = RANK(FILTER(ALL(Source),Source[CategoryId] = "1"), ORDERBY([Total CCAA Energy],DESC))
+		displayFolder: TOPN
+		lineageTag: a43ea992-feb9-4fc5-8a3c-0a171b245fcb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Energy Top 6 Sources (GWh)' = ```
+			
+			CALCULATE(
+			    [Generation (GWh)],
+			    KEEPFILTERS(
+			        TOPN(
+			            6,
+			            ALL(Source),            
+			            [Total Generation]
+			        )
+			    )
+			)
+			    
+			```
+		formatString: #,0
+		displayFolder: TOPN
+		lineageTag: 1eec9700-7921-40b9-94e2-47d71bcb471a
+
+	measure 'Total CCAA Energy' = ```
+			
+			CALCULATE(
+			    [Energy CCAA (GWh)],  
+			    REMOVEFILTERS('Calendar')
+			)
+			```
+		formatString: #,0
+		displayFolder: CCAA
+		lineageTag: 2e2ec68d-0809-4250-9958-851610c21f9e
+
+	measure 'Energy Top 4 Non-Renewable Sources (GWh)' = ```
+			CALCULATE(
+					[Generation (GWh)],
+			        KEEPFILTERS(
+			            TOPN(4,
+			                FILTER(
+			                    ALL(Source),
+			                    Source[CategoryId] = "2"
+			                ), 
+			                [Total Generation]
+			            )
+					)
+			    )
+			```
+		formatString: #,0
+		displayFolder: TOPN
+		lineageTag: 179788aa-d755-41e2-9acb-d881b39d3cb1
+
+	measure 'Demand Ratio' = ```
+			
+			  DIVIDE(
+					[Demand (GWh)],
+					CALCULATE(
+						[Demand (GWh)],
+						ALL(Source)
+					)
+				)
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Ratios
+		lineageTag: b9c33ce3-2495-446e-afa6-502e6775c33c
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Power Top 6 (MW)' = ```
+			
+			CALCULATE(
+			    [Power (MW)],
+			    KEEPFILTERS(
+			        TOPN(
+			            6,
+			            ALL(Source),            
+			            [Total Power]
+			        )
+			    )
+			)
+			   
+			```
+		formatString: #,0
+		displayFolder: Capacity
+		lineageTag: 7e5474e0-2a8c-49b8-9e0a-e8f2aa288fa6
+
+	measure 'Region Ratio' = ```
+			
+			
+			    DIVIDE(
+					[Energy CCAA (GWh)],
+					CALCULATE(
+						[Energy CCAA (GWh)],
+						ALL(Region)
+					)
+				)
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: CCAA
+		lineageTag: 10cfa7a4-5338-46d6-b7aa-54083b671c02
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Total Power' = ```
+			
+			CALCULATE(
+			    [Power (MW)],  
+			    REMOVEFILTERS(fact_capacity[Year])
+			)
+			```
+		formatString: #,0
+		displayFolder: Capacity
+		lineageTag: f95e390d-6be5-4800-8a2e-78d2692ffd02
+
+	measure YOY =
+			
+			VAR PY = CALCULATE(
+			    [Energy CCAA (GWh)],
+			    SAMEPERIODLASTYEAR('Calendar'[Date])
+			)
+			
+			RETURN DIVIDE(([Energy CCAA (GWh)] - PY), PY)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: CCAA
+		lineageTag: 9dc0d748-cf86-484a-9b39-eea299a3417a
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Energy Top 4 Regions (GWh)' = ```
+			
+			CALCULATE(
+			    [Energy CCAA (GWh)],
+			    KEEPFILTERS(
+			        TOPN(
+			            4,
+			            ALL(Region[RegionTranslateEnglish], Region[RegionTranslatePortuguese], Region[RegionTranslateSpanish]),            
+			            [Total CCAA Energy]
+			        )
+			    )
+			)
+			 
+			```
+		formatString: #,0
+		displayFolder: CCAA
+		lineageTag: c375d5da-1126-478f-8284-4f6ec603cd8e
+
+	measure 'Generation Ratio' =
+			
+			IF(
+			    SELECTEDVALUE(Source[CategoryId]) = "3",
+			    BLANK(),
+			    DIVIDE(
+					[Generation (GWh)],
+					CALCULATE(
+						[Generation (GWh)],
+						ALL(Source)
+					)
+				)
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Ratios
+		lineageTag: 993737cc-8ce5-4e8f-b46b-dac3b2bf0b20
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Import Energy (GWh)' = CALCULATE([Energy International Exchange (GWh)], FILTER(fact_inter, fact_inter[Energy]>=0 ))
+		formatString: #,0
+		displayFolder: Inter
+		lineageTag: f7ee68ea-8e09-4ed5-8860-53fe980e764b
+
+	measure 'Export Energy (GWh)' = CALCULATE([Energy International Exchange (GWh)], FILTER(fact_inter, fact_inter[Energy]<=0 ))
+		formatString: #,0
+		displayFolder: Inter
+		lineageTag: 53e9b286-a1ee-4395-974b-5efdd83b324f
+
+	measure 'Inter Ratio' = ```
+			
+			    DIVIDE(
+					[Energy International Exchange (GWh)],
+					CALCULATE(
+						[Energy International Exchange (GWh)],
+						REMOVEFILTERS(Country[CountryTranslationEnglish], Country[CountryTranslationEnglish], Country[CountryTranslationSpanish])
+					)
+				)
+			
+			```
+		formatString: " 0.00%;-0.00%;0.00%"
+		displayFolder: Inter
+		lineageTag: 41615119-b43e-4959-af31-1985ab79abff
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'AVG Generation Previous Years (GWh)' =
+			
+			IF(
+			    SELECTEDVALUE(Source[CategoryId]) = "3",
+			    BLANK(),
+			    DIVIDE(
+					CALCULATE(
+			            [Generation (GWh)],
+			            'Calendar'[Year] < SELECTEDVALUE('Calendar'[Year])
+			        ),
+					CALCULATE(
+						DISTINCTCOUNT('Calendar'[Year]),
+			            'Calendar'[Year] < SELECTEDVALUE('Calendar'[Year])
+			        )
+				)
+			)
+		formatString: #,0
+		displayFolder: Auxiliar
+		lineageTag: 10facb82-c678-4e12-818a-dbbd74406d29
+
+	measure 'Generation Selected Year (GWh)' =
+			
+			IF(
+			    SELECTEDVALUE(Source[CategoryId]) = "3",
+			    BLANK(),
+				CALCULATE(
+			        [Generation (GWh)],
+			        'Calendar'[Year] = SELECTEDVALUE('Calendar'[Year])
+			    )
+			)
+		formatString: #,0
+		displayFolder: Auxiliar
+		lineageTag: 01d3c8d3-eede-4d40-90ef-1075420eb585
+
+	measure '% dif gen selected vs prev' = ```
+			
+			DIVIDE(
+			    ([Generation Selected Year (GWh)] - [AVG Generation Previous Years (GWh)]),
+			    [AVG Generation Previous Years (GWh)]
+			   
+			)
+			    
+			```
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Auxiliar
+		lineageTag: 2146eddb-afbf-4da9-90ee-428649f69e46
+
+	measure 'General Title' =
+			SWITCH( [Language],
+			  "es-ES", "Análisis Sistema Eléctrico Español",
+			  "pt-PT", "Análise Sistema Elétrico Espanhol",
+			  "en-US", "Spanish Electricity System Analysis"
+			)
+		displayFolder: Translate\General
+		lineageTag: b39a89a8-879e-445d-8343-8c8dd469687e
+
+	measure Language = SELECTEDVALUE(Languages[DefaultCulture])
+		displayFolder: Translate\General
+		lineageTag: a5badf10-a412-498e-a8e8-700498ea4177
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Last Update Title' =
+			SWITCH( [Language],
+			  "es-ES", "Última Atualización",
+			  "pt-PT", "Última Atualização",
+			  "en-US", "Last Update"
+			)
+		displayFolder: Translate\General
+		lineageTag: 0b2bb6b9-5a69-475d-8076-f1303945376f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Generation Ev. Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de la Generación",
+			  "pt-PT", "Evolução da Geração",
+			  "en-US", "Generation Evolution"
+			)
+		displayFolder: Translate\Generation
+		lineageTag: db4540ba-1b51-4d26-b809-6236f6d4068c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gen. PY' =
+			
+			CALCULATE(
+			    [Generation (GWh)],
+			    'Calendar'[Year] = (YEAR(TODAY())-1)
+			)
+		formatString: #,0
+		displayFolder: Card_Balance\Gen
+		lineageTag: af9df8dd-a238-40f8-be4f-6e9712559835
+
+	measure 'Gen. YTD' =
+			
+			CALCULATE(
+			    [Generation (GWh)],
+			    'Calendar'[Year] = YEAR(TODAY()
+			))
+		formatString: #,0
+		displayFolder: Card_Balance\Gen
+		lineageTag: b5b934cd-03eb-45d4-b3a2-292cdf09c30d
+
+	measure 'Last Year Label' = "PY" &" (" & CONVERT(YEAR(TODAY())-1, STRING) &"):"
+		displayFolder: Card_Balance\Label
+		lineageTag: 34532726-0f37-4ffc-8080-932979ba089a
+
+	measure 'Current Year Label' = "YTD" &" (" & CONVERT(YEAR(TODAY()), STRING) &"):"
+		displayFolder: Card_Balance\Label
+		lineageTag: c6f7a169-5fd8-41ff-82f0-6bd37323b1c8
+
+	measure 'Ren. YTD' =
+			
+			CALCULATE(
+			    [Renewable (GWh)],
+			    'Calendar'[Year] = YEAR(TODAY()
+			))
+		formatString: #,0
+		displayFolder: Card_Balance\Ren
+		lineageTag: 1c539ede-d549-4fa6-9a82-34ff66a33dc8
+
+	measure 'Ren. PY' =
+			
+			CALCULATE(
+			    [Renewable (GWh)],
+			    'Calendar'[Year] = (YEAR(TODAY())-1)
+			)
+		formatString: #,0
+		displayFolder: Card_Balance\Ren
+		lineageTag: 42a65e06-6ea9-4efc-b67b-c99dfe950fcd
+
+	measure 'NonRen. PY' =
+			
+			CALCULATE(
+			    [Non-Renewable (GWh)],
+			    'Calendar'[Year] = (YEAR(TODAY())-1)
+			)
+		formatString: #,0
+		displayFolder: Card_Balance\Non
+		lineageTag: dfe9a081-03ff-4765-a21b-7ee76e46f52d
+
+	measure 'NonRen. YTD' =
+			
+			CALCULATE(
+			    [Non-Renewable (GWh)],
+			    'Calendar'[Year] = YEAR(TODAY()
+			))
+		formatString: #,0
+		displayFolder: Card_Balance\Non
+		lineageTag: 5c7341af-571c-4b47-934b-36e3c0fe22ca
+
+	measure 'Gen. PY YTD' =
+			
+			CALCULATE(
+			    [Gen. PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Balance)]
+			    )
+			)
+		displayFolder: Card_Balance\Gen
+		lineageTag: d91e9db0-132a-487f-a870-58c551457345
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gen. YOY%' =
+			
+			DIVIDE(
+			    [Gen. YOY YTD],
+			    [Gen. PY YTD]
+			)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Card_Balance\Gen
+		lineageTag: 1312a8bb-23c7-46b5-841d-f6a987c41e24
+
+	measure 'Gen. YOY YTD' = ```
+			
+			IF(
+			    ISBLANK([Gen. YTD]),
+			    BLANK(),
+			    ([Gen. YTD] - [Gen. PY YTD])
+			)
+			
+			    
+			```
+		displayFolder: Card_Balance\Gen
+		lineageTag: 3400b8e8-a6ad-49ff-8f2d-0238a40359ae
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gen. YOY Label' = ```
+			
+			VAR _Value = FORMAT([Gen. YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Gen. YOY%]>0, UNICHAR(129129),
+			    [Gen. YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Balance\Label
+		lineageTag: ac453055-f01d-41fa-a0bb-63ae0eb740c1
+
+	measure 'NonRen. PY YTD' =
+			
+			CALCULATE(
+			    [NonRen. PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Balance)]
+			    )
+			)
+		displayFolder: Card_Balance\Non
+		lineageTag: 8aa03b11-12a3-4f4d-a041-32d8771e6f86
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ren. PY YTD' =
+			
+			CALCULATE(
+			    [Ren. PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Balance)]
+			    )
+			)
+		displayFolder: Card_Balance\Ren
+		lineageTag: 70b217cc-8a3c-401e-9e8e-dff4432fda65
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'NonRen. YOY YTD' =
+			
+			IF(
+			    ISBLANK([NonRen. YTD]),
+			    BLANK(),
+			    ([NonRen. YTD] - [NonRen. PY YTD])
+			)
+		displayFolder: Card_Balance\Non
+		lineageTag: 89647050-0715-494e-a78e-531445fe7085
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ren. YOY YTD' =
+			
+			IF(
+			    ISBLANK([Ren. YTD]),
+			    BLANK(),
+			    ([Ren. PY] - [Ren. PY YTD])
+			)
+		displayFolder: Card_Balance\Ren
+		lineageTag: 5c3d353b-7207-4de5-916f-169b71128bd0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'NonRen. YOY%' =
+			
+			DIVIDE(
+			    [NonRen. YOY YTD],
+			    [NonRen. PY YTD]
+			)
+		displayFolder: Card_Balance\Non
+		lineageTag: 1f02f98f-90aa-46fc-a134-e4248b9708e6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ren. YOY%' =
+			
+			DIVIDE(
+			    [Ren. YOY YTD],
+			    [Ren. PY YTD]
+			)
+		displayFolder: Card_Balance\Ren
+		lineageTag: 12daa370-d5bc-4d09-85a6-abd5e7b84690
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'NonRen. YOY Label' = ```
+			
+			VAR _Value = FORMAT([NonRen. YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [NonRen. YOY%]>0, UNICHAR(129129),
+			    [NonRen. YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Balance\Label
+		lineageTag: 827b4ddc-c09d-4e74-9f8b-e9562cb5cc2b
+
+	measure 'Ren. YOY Label' = ```
+			
+			VAR _Value = FORMAT([Ren. YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Ren. YOY%]>0, UNICHAR(129129),
+			    [Ren. YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",1)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow & _Space
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Balance\Label
+		lineageTag: 9236bc85-c8cd-457d-9af0-964217cdd0a1
+
+	measure 'CCAA Generation by year Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de la Generación por región (GWh)",
+			  "pt-PT", "Evolução da Geração por Região (GWh)",
+			  "en-US", "Region Generation Evolution (GWh)"
+			)
+		displayFolder: Translate\Regions
+		lineageTag: 3757ed9d-3be2-412b-bb63-2c267842eae9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Generation' = ```
+			
+			CALCULATE(
+			    [Generation (GWh)],  
+			    REMOVEFILTERS('Calendar')
+			)
+			```
+		displayFolder: Basics
+		lineageTag: ef6d977b-3fde-4c47-bbcd-4dc74b9c9f8a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ratio Top 6 Sources (GWh)' = ```
+			
+			
+			    IF(
+			        SELECTEDVALUE(Source[CategoryId]) = "3",
+			        BLANK(),
+			        DIVIDE(
+					    CALCULATE(
+			                [Generation (GWh)],
+			                KEEPFILTERS(
+			                    TOPN(
+			                        6,
+			                        ALL(Source),            
+			                        [Total Generation]
+			                    )
+			                )
+			            ),
+					    CALCULATE(
+						    [Generation (GWh)],
+						    ALL(Source)
+					    )
+				    )
+			    )
+			
+			```
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: TOPN
+		lineageTag: 8e0a5029-716f-4144-815c-b3122f9ff0c2
+
+	measure 'Generation top 6 Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de la Generación por Fuente de Energía - Top 6 (GWh)",
+			  "pt-PT", "Evolução da Geração por Fonte de Energia - Top 6 (GWh)",
+			  "en-US", "Generation Evolution by Energy Source - Top 6 (GWh)"
+			)
+		displayFolder: Translate\Generation
+		lineageTag: 7a99457f-536e-45f2-959f-06a7c20af15d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page1 Title' =
+			SWITCH( [Language],
+			  "es-ES", "Balance Eléctrico",
+			  "pt-PT", "Balanço Elétrico",
+			  "en-US", "Electrical Energy Balance "
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: 9eb581aa-823d-403a-a453-4ce96e462c4f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Power Ev. Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de la Potencia Instalada (MW)",
+			  "pt-PT", "Evolução da Potência Instalada (MW)",
+			  "en-US", "Power Installed Evolution (MW)"
+			)
+		displayFolder: Translate\Power
+		lineageTag: b5dabc97-9c1d-4e5d-a9e9-71cd0ee2a1f5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page2 Title' =
+			SWITCH( [Language],
+			  "es-ES", "Generación por Fuente de Energía",
+			  "pt-PT", "Geração por Fonte de Energia",
+			  "en-US", "Generation by Energy Source"
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: ca4f168f-de3d-42e2-a507-6e2a1e62f51a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page3 Title' =
+			SWITCH( [Language],
+			  "es-ES", "Regiones",
+			  "pt-PT", "Regiões",
+			  "en-US", "Regions"
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: c02eae47-fd9c-45ec-beb4-fa9878060015
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ratio over Demand' =
+			
+			    DIVIDE(
+					ABS([Energy International Exchange (GWh)]),
+					CALCULATE(
+						[Demand (GWh)],
+						REMOVEFILTERS(Country[CountryTranslationEnglish], Country[CountryTranslationEnglish], Country[CountryTranslationSpanish])
+					)
+				)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Inter
+		lineageTag: d5453536-5eba-47a6-ad6d-cab4dcb92f23
+
+	measure 'Exchange Detail Title' =
+			SWITCH( [Language],
+			  "es-ES", "Detalle Intercambio Internacional de Energía",
+			  "pt-PT", "Detalhe Intercâmbio Internacional de Energia",
+			  "en-US", "International Energy Exchange Detail"
+			)
+		displayFolder: Translate\Exchange
+		lineageTag: c413c371-0e8d-4dfb-b037-1374fbf9410f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Int1 Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evoución Intercambio Internacional de Energía",
+			  "pt-PT", "Evolução Intercâmbio Internacional de Energia",
+			  "en-US", "International Energy Exchange Evolution"
+			)
+		displayFolder: Translate\Exchange
+		lineageTag: 0ac29f74-21ea-40a4-a47f-d8fbfc515d86
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Int2 Title' =
+			SWITCH( [Language],
+			  "es-ES", "Intercambio Internacional de Energía por País",
+			  "pt-PT", "Intercâmbio Internacional de Energia por País",
+			  "en-US", "International Energy Exchange by Country"
+			)
+		displayFolder: Translate\Exchange
+		lineageTag: 11e5a1bb-dfec-48b8-86b5-a4d31a36fc0d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page4 Title' =
+			SWITCH( [Language],
+			  "es-ES", "Potencia instalada",
+			  "pt-PT", "Potência Instalada",
+			  "en-US", "Installed Capacity"
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: 8300d932-2c19-417c-84df-fa315b2f315b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page5 Title' =
+			SWITCH( [Language],
+			  "es-ES", "Intercambio Internacional",
+			  "pt-PT", "Intercâmbio Internacional",
+			  "en-US", "International Exchange"
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: 8b583d00-b3a9-45ce-b722-ecbb50ec61d5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Region name' = ```
+			
+			VAR regionid = 
+			CALCULATE(
+			    SELECTEDVALUE(Region[RegionID]),
+			    KEEPFILTERS(
+			        TOPN(
+			            1,
+			            ALL(Region),            
+			            [Total CCAA Energy]
+			        )
+			    )
+			)
+			RETURN
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Region'[RegionTranslateEnglish]),
+			        FILTER(Region, Region[RegionID]= regionid)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Region'[RegionTranslateSpanish]),
+			        FILTER(Region, Region[RegionID]= regionid)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Region'[RegionTranslatePortuguese]),
+			        FILTER(Region, Region[RegionID]= regionid)
+			    )
+			)
+			```
+		displayFolder: Card_Regions\Top1
+		lineageTag: 1b378b7f-aa93-44cb-9da7-0755d294e13a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Region' = ```
+			
+			CALCULATE(
+			    [Energy CCAA (GWh)],
+			    KEEPFILTERS(
+			        TOPN(
+			            1,
+			            ALL(Region),            
+			            [Total CCAA Energy]
+			        )
+			    )
+			)
+			```
+		displayFolder: Card_Regions\Top1
+		lineageTag: b51b2a5f-c8a9-4c3d-ab7c-ed6e8a3691df
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Region' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 2
+			    ),
+			    [Energy CCAA (GWh)]
+			)
+			
+			RETURN
+			_2Region
+			```
+		displayFolder: Card_Regions\Top2
+		lineageTag: f4a19790-280d-4479-a4b6-165967358a59
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Region name' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 2
+			    ),
+			    Region[RegionID]
+			)
+			
+			RETURN
+			
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Region'[RegionTranslateEnglish]),
+			        FILTER(Region, Region[RegionID]= _2Region)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Region'[RegionTranslateSpanish]),
+			        FILTER(Region, Region[RegionID]= _2Region)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Region'[RegionTranslatePortuguese]),
+			        FILTER(Region, Region[RegionID]= _2Region)
+			    )
+			)
+			```
+		displayFolder: Card_Regions\Top2
+		lineageTag: 5252b774-c6bd-4ec5-bf9a-3d068dad60e9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Region' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 3
+			    ),
+			    [Energy CCAA (GWh)]
+			)
+			
+			RETURN
+			_3Region
+			```
+		displayFolder: Card_Regions\Top3
+		lineageTag: 74f64f5c-98ca-48ce-9ae0-86b8070ccca6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Region' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 4
+			    ),
+			    [Energy CCAA (GWh)]
+			)
+			
+			RETURN
+			_4Region
+			```
+		displayFolder: Card_Regions\Top4
+		lineageTag: dd4f5dc5-2f22-49d2-9e75-c83d97bb98c3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Region name' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 4
+			    ),
+			    Region[RegionID]
+			)
+			
+			RETURN
+			
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Region'[RegionTranslateEnglish]),
+			        FILTER(Region, Region[RegionID]= _4Region)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Region'[RegionTranslateSpanish]),
+			        FILTER(Region, Region[RegionID]= _4Region)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Region'[RegionTranslatePortuguese]),
+			        FILTER(Region, Region[RegionID]= _4Region)
+			    )
+			)
+			```
+		displayFolder: Card_Regions\Top4
+		lineageTag: c32627ef-8d82-4264-bd2b-20b043fdfac9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Region name' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 3
+			    ),
+			    Region[RegionID]
+			)
+			
+			RETURN
+			
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Region'[RegionTranslateEnglish]),
+			        FILTER(Region, Region[RegionID]= _3Region)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Region'[RegionTranslateSpanish]),
+			        FILTER(Region, Region[RegionID]= _3Region)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Region'[RegionTranslatePortuguese]),
+			        FILTER(Region, Region[RegionID]= _3Region)
+			    )
+			)
+			```
+		displayFolder: Card_Regions\Top3
+		lineageTag: 39d5adbd-b3a8-4d72-a93c-757051d19ccc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Source Colour 2' = SELECTEDVALUE(Source[Color.1])
+		displayFolder: Color
+		lineageTag: 15122043-4fcd-4351-bfec-ded341a24476
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Source Colour' = SELECTEDVALUE(Source[Color])
+		displayFolder: Color
+		lineageTag: ac5692d4-a38a-46b0-bfd6-d50482984aae
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Region Colour' = SELECTEDVALUE(Region[Region Colours])
+		displayFolder: Color
+		lineageTag: 08270fc3-e34f-4610-a9fa-0653f88df594
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Region PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _1Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 1
+			    ),
+			    CALCULATE(
+			        [Energy CCAA (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_1Region
+			```
+		displayFolder: Card_Regions\Top1
+		lineageTag: b9f32805-c55f-4a21-860e-e9c39ba32f54
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Region YTD' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _1Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 1
+			    ),
+			    CALCULATE(
+			        [Energy CCAA (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY()))
+			    ) 
+			)
+			
+			RETURN
+			_1Region
+			```
+		displayFolder: Card_Regions\Top1
+		lineageTag: fe689f86-6e99-45ad-a550-7eead6533ebc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Region PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 2
+			    ),
+			    CALCULATE(
+			        [Energy CCAA (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_2Region
+			```
+		displayFolder: Card_Regions\Top2
+		lineageTag: bdd8d490-36f6-4400-aa40-1c961e705c15
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Region YTD' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 2
+			    ),
+			    CALCULATE(
+			        [Energy CCAA (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY()))
+			    ) 
+			)
+			
+			RETURN
+			_2Region
+			```
+		displayFolder: Card_Regions\Top2
+		lineageTag: b1578c22-9197-410d-b25e-156dd1723ed1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Region PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 3
+			    ),
+			    CALCULATE(
+			        [Energy CCAA (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_3Region
+			```
+		displayFolder: Card_Regions\Top3
+		lineageTag: 1db0fbd1-6a99-48b9-a9b9-6e12b48fbc88
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Region PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 4
+			    ),
+			    CALCULATE(
+			        [Energy CCAA (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_4Region
+			```
+		displayFolder: Card_Regions\Top4
+		lineageTag: 78ab5d54-5afb-4484-bfbd-e40cb34e7819
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Region YTD' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 3
+			    ),
+			    CALCULATE(
+			        [Energy CCAA (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY()))
+			    ) 
+			)
+			
+			RETURN
+			_3Region
+			```
+		displayFolder: Card_Regions\Top3
+		lineageTag: 0dc726a2-cbef-4a16-b52d-95ed018fef5a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Region YTD' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Region[RegionID]),
+			        "rank", RANKX(Region, [Energy CCAA (GWh)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 4
+			    ),
+			    CALCULATE(
+			        [Energy CCAA (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY()))
+			    ) 
+			)
+			
+			RETURN
+			_4Region
+			```
+		displayFolder: Card_Regions\Top4
+		lineageTag: 29a9780a-b01d-4019-b06a-fa407cc598bf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Region PY YTD' =
+			
+			CALCULATE(
+			    [Top 1 Region PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (CCAA)]
+			    )
+			)
+		displayFolder: Card_Regions\Top1
+		lineageTag: 1a66feb1-f13b-424b-9cb9-a560cfc870ee
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Region PY YTD' =
+			
+			CALCULATE(
+			    [Top 2 Region PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (CCAA)]
+			    )
+			)
+		displayFolder: Card_Regions\Top2
+		lineageTag: e1694801-6f28-4c9a-8746-3a5c516c161d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Region PY YTD' =
+			
+			CALCULATE(
+			    [Top 3 Region PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (CCAA)]
+			    )
+			)
+		displayFolder: Card_Regions\Top3
+		lineageTag: 41055e63-e0f4-4fc6-897a-2f94ea8bd8ab
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Region PY YTD' =
+			
+			CALCULATE(
+			    [Top 4 Region PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (CCAA)]
+			    )
+			)
+		displayFolder: Card_Regions\Top4
+		lineageTag: d94053f5-9141-4711-a527-1963f64b5167
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Region YOY YTD' =
+			
+			IF(
+			    ISBLANK([Top 1 Region YTD]),
+			    BLANK(),
+			    ([Top 1 Region YTD] - [Top 1 Region PY YTD])
+			)
+		displayFolder: Card_Regions\Top1
+		lineageTag: 21cf43cd-a7c0-4ec4-937d-c62b72ec299e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Region YOY YTD' =
+			
+			IF(
+			    ISBLANK([Top 2 Region YTD]),
+			    BLANK(),
+			    ([Top 2 Region YTD] - [Top 2 Region PY YTD])
+			)
+		displayFolder: Card_Regions\Top2
+		lineageTag: bd1461f0-f32d-44a0-bf0e-a70886d66415
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Region YOY YTD' =
+			
+			IF(
+			    ISBLANK([Top 3 Region YTD]),
+			    BLANK(),
+			    ([Top 3 Region YTD] - [Top 3 Region PY YTD])
+			)
+		displayFolder: Card_Regions\Top3
+		lineageTag: e1737609-4483-45d9-bd82-e6dc3e059f2e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Region YOY YTD' =
+			
+			IF(
+			    ISBLANK([Top 4 Region YTD]),
+			    BLANK(),
+			    ([Top 4 Region YTD] - [Top 4 Region PY YTD])
+			)
+		displayFolder: Card_Regions\Top4
+		lineageTag: 247730a0-90d7-4eb6-8b37-b0d328687d5c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Region YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 1 YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 1 YOY%]>0, UNICHAR(129129),
+			    [Top 1 YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Regions\Top1
+		lineageTag: 4012c9e5-3692-4c86-92e0-6a047795b12d
+
+	measure 'Top 1 YOY%' =
+			
+			DIVIDE(
+			    [Top 1 Region YOY YTD],
+			    [Top 1 Region PY YTD]
+			)
+		displayFolder: Card_Regions\Top1
+		lineageTag: 8eac38b3-6e14-4c23-8c0f-02ec56b302f7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 YOY%' =
+			
+			DIVIDE(
+			    [Top 2 Region YOY YTD],
+			    [Top 2 Region PY YTD]
+			)
+		displayFolder: Card_Regions\Top2
+		lineageTag: e13290dc-14fe-4b63-9147-fabdf80a66d6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 YOY%' =
+			
+			DIVIDE(
+			    [Top 3 Region YOY YTD],
+			    [Top 3 Region PY YTD]
+			)
+		displayFolder: Card_Regions\Top3
+		lineageTag: f22e133e-0f37-4177-a2fc-4d6bae630bf2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 YOY%' =
+			
+			DIVIDE(
+			    [Top 4 Region YOY YTD],
+			    [Top 4 Region PY YTD]
+			)
+		displayFolder: Card_Regions\Top4
+		lineageTag: 86d6e182-1875-41ff-9ba5-813478b6adb6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Region YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 2 YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 2 YOY%]>0, UNICHAR(129129),
+			    [Top 2 YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Regions\Top2
+		lineageTag: c5467d1c-bf2d-44a7-9a60-e4a26025ead5
+
+	measure 'Top 3 Region YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 3 YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 3 YOY%]>0, UNICHAR(129129),
+			    [Top 3 YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Regions\Top3
+		lineageTag: 9f7ad0f8-0bb0-41be-a779-52a92fc03cdf
+
+	measure 'Top 4 Region YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 4 YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 4 YOY%]>0, UNICHAR(129129),
+			    [Top 4 YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Regions\Top4
+		lineageTag: 92643e39-a2f3-4c0d-90fd-df32c11b1c7e
+
+	measure 'Top Region Card Title' =
+			SWITCH( [Language],
+			  "es-ES", "Top 4 Regiones (GWh)",
+			  "pt-PT", "Top 4 Regiões (GWh)",
+			  "en-US", "Top 4 Regions (GWh)"
+			)
+		displayFolder: Translate\Regions
+		lineageTag: 95176898-5d65-430a-a3c6-8310815be70f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Generation Card label' =
+			SWITCH( [Language],
+			  "es-ES", "Total Generación"& UNICHAR(10) &"(GWh)",
+			  "pt-PT", "Total Geração"& UNICHAR(10) &"(GWh)",
+			  "en-US", "Total Generation"& UNICHAR(10) &"(GWh)"
+			)
+		displayFolder: Card_Balance\Label
+		lineageTag: 72744eba-fa65-4276-8b7a-5c98d1ef835f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Renwable Card label' =
+			SWITCH( [Language],
+			  "es-ES", "Total Renovable"& UNICHAR(10) &"(GWh)",
+			  "pt-PT", "Total Renovável"& UNICHAR(10) &"(GWh)",
+			  "en-US", "Total Renewable"& UNICHAR(10) &"(GWh)"
+			)
+		displayFolder: Card_Balance\Label
+		lineageTag: 5154b0da-ebd2-46f9-8b8e-6a867136e0d8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Non-Renwable Card label' =
+			SWITCH( [Language],
+			  "es-ES", "Total No-Renovable"& UNICHAR(10) &"(GWh)",
+			  "pt-PT", "Total Não-Renovável"& UNICHAR(10) &"(GWh)",
+			  "en-US", "Total Non-Renewable"& UNICHAR(10) &"(GWh)"
+			)
+		displayFolder: Card_Balance\Label
+		lineageTag: 2d5d4f30-efe5-4f83-b297-ab5deedb10ca
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Balance Ev. Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución del Balance Eléctrico (GWh)",
+			  "pt-PT", "Evolução do Balanço Elétrico (GWh)",
+			  "en-US", "Electrical Energy Balance Evolution (GWh)"
+			)
+		displayFolder: Translate\Balance
+		lineageTag: 32da0e1d-d1d8-4302-a50c-9e678ad8ec43
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Power' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _1Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 1
+			    ),
+			    [Power (MW)]
+			)
+			
+			RETURN
+			_1Region
+			```
+		displayFolder: Card_Power\Top1
+		lineageTag: d19b00d5-a59e-47e2-b1bd-5a710f92ed76
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Power' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 2
+			    ),
+			    [Power (MW)]
+			)
+			
+			RETURN
+			_2Region
+			```
+		displayFolder: Card_Power\Top2
+		lineageTag: d228e9d6-b7ef-4227-b540-883e6f419a73
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Power' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 3
+			    ),
+			    [Power (MW)]
+			)
+			
+			RETURN
+			_3Region
+			```
+		displayFolder: Card_Power\Top3
+		lineageTag: 2c7b4820-4dd7-4070-8f6d-1c2ed139bc6e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Power' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 4
+			    ),
+			    [Power (MW)]
+			)
+			
+			RETURN
+			_4Region
+			```
+		displayFolder: Card_Power\Top4
+		lineageTag: 6469614b-91c5-4f01-a0a7-76089371b345
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Power name' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _1Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 1
+			    ),
+			    Source[SourceId]
+			)
+			
+			RETURN
+			
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationEnglish]),
+			        FILTER(Source, Source[SourceId] = _1Region)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationSpanish]),
+			        FILTER(Source, Source[SourceId] = _1Region)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationPortuguese]),
+			        FILTER(Source, Source[SourceId] = _1Region)
+			    )
+			)
+			```
+		displayFolder: Card_Power\Top1
+		lineageTag: 14746dd7-1b29-40fb-a9e8-73dc461b9c10
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Power name' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 2
+			    ),
+			    Source[SourceId]
+			)
+			
+			RETURN
+			
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationEnglish]),
+			        FILTER(Source, Source[SourceId] = _2Region)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationSpanish]),
+			        FILTER(Source, Source[SourceId] = _2Region)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationPortuguese]),
+			        FILTER(Source, Source[SourceId] = _2Region)
+			    )
+			)
+			```
+		displayFolder: Card_Power\Top2
+		lineageTag: f11eb653-16e9-407a-bd2f-54a6387f2a36
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Power name' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 3
+			    ),
+			    Source[SourceId]
+			)
+			
+			RETURN
+			
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationEnglish]),
+			        FILTER(Source, Source[SourceId] = _3Region)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationSpanish]),
+			        FILTER(Source, Source[SourceId] = _3Region)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationPortuguese]),
+			        FILTER(Source, Source[SourceId] = _3Region)
+			    )
+			)
+			```
+		displayFolder: Card_Power\Top3
+		lineageTag: 8e8457ee-3a90-480b-9012-4aacfb60ee41
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Power name' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 4
+			    ),
+			    Source[SourceId]
+			)
+			
+			RETURN
+			
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationEnglish]),
+			        FILTER(Source, Source[SourceId] = _4Region)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationSpanish]),
+			        FILTER(Source, Source[SourceId] = _4Region)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationPortuguese]),
+			        FILTER(Source, Source[SourceId] = _4Region)
+			    )
+			)
+			```
+		displayFolder: Card_Power\Top4
+		lineageTag: 18923742-1ac7-44f5-ba20-42a64ce149ec
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Power 2PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _1Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 1
+			    ),
+			    CALCULATE(
+			        [Power (MW)],
+			        'Calendar'[Year] = (YEAR(TODAY())-2)
+			    ) 
+			)
+			
+			RETURN
+			_1Region
+			```
+		displayFolder: Card_Power\Top1
+		lineageTag: 95f7a18f-2a9b-4da4-bdbc-fdfab223586b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Power PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 2
+			    ),
+			    CALCULATE(
+			        [Power (MW)],
+			        'Calendar'[Year] = YEAR(TODAY())-1
+			    ) 
+			)
+			
+			RETURN
+			_2Region
+			```
+		displayFolder: Card_Power\Top2
+		lineageTag: 796586a0-c5b9-4cd0-b369-be436e791c35
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Power PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 3
+			    ),
+			    CALCULATE(
+			        [Power (MW)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_3Region
+			```
+		displayFolder: Card_Power\Top3
+		lineageTag: ac8e8f3e-a0c8-4ee2-adb1-0af989f92b6c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Power PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 4
+			    ),
+			    CALCULATE(
+			        [Power (MW)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_4Region
+			```
+		displayFolder: Card_Power\Top4
+		lineageTag: 12579508-c7b1-4244-a0c7-76c6c7cfa9ac
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Power PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _1Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 1
+			    ),
+			    CALCULATE(
+			        [Power (MW)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_1Region
+			```
+		displayFolder: Card_Power\Top1
+		lineageTag: 596904c2-4812-4ec0-8276-245a237db583
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '2 Years Ago Label' = CONCATENATE(CONVERT(YEAR(TODAY())-2, STRING), ":")
+		displayFolder: Card_Power
+		lineageTag: ac6e8a44-dfa4-437f-af17-7447d886b8d1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Power 2PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 2
+			    ),
+			    CALCULATE(
+			        [Power (MW)],
+			        'Calendar'[Year] = YEAR(TODAY())-2
+			    ) 
+			)
+			
+			RETURN
+			_2Region
+			```
+		displayFolder: Card_Power\Top2
+		lineageTag: ed82ee2f-c40d-47ac-8d1d-41e1b7561bd2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Power 2PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 3
+			    ),
+			    CALCULATE(
+			        [Power (MW)],
+			        'Calendar'[Year] = YEAR(TODAY())-2
+			    ) 
+			)
+			
+			RETURN
+			_3Region
+			```
+		displayFolder: Card_Power\Top3
+		lineageTag: 2ebfb513-3a1f-4d22-91a5-b34abc6ead5f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Power 2PY' = ```
+			
+			VAR RegionsAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Power (MW)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        RegionsAndEnergy,
+			        [rank] = 4
+			    ),
+			    CALCULATE(
+			        [Power (MW)],
+			        'Calendar'[Year] = YEAR(TODAY())-2
+			    ) 
+			)
+			
+			RETURN
+			_4Region
+			```
+		displayFolder: Card_Power\Top4
+		lineageTag: eee0c13a-1a38-4067-b275-e5d4eab463f6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Power YOY%' =
+			
+			IF(
+			    ISBLANK([Top 1 Power 2PY]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Top 1 Power PY] - [Top 1 Power 2PY]),
+			        [Top 1 Power 2PY]
+			    )
+			)
+		displayFolder: Card_Power\Top1
+		lineageTag: 39cfb538-1ace-43c3-af16-86bb86e0bbf9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Power YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 1 Power YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 1 Power YOY%]>0, UNICHAR(129129),
+			    [Top 1 Power YOY%]=0, UNICHAR(129130),
+			    [Top 1 Power YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Power\Top1
+		lineageTag: e9848ccc-be40-4bc7-aa03-7c8d88132ea0
+
+	measure 'Top 2 Power YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 2 Power YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 2 Power YOY%]>0, UNICHAR(129129),
+			    [Top 2 Power YOY%]=0, UNICHAR(129130),
+			    [Top 2 Power YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Power\Top2
+		lineageTag: 03caed87-32ce-426c-b9d7-3f6c433ef944
+
+	measure 'Top 2 Power YOY%' =
+			
+			IF(
+			    ISBLANK([Top 2 Power 2PY]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Top 2 Power PY] - [Top 2 Power 2PY]),
+			        [Top 2 Power 2PY]
+			    )
+			)
+		displayFolder: Card_Power\Top2
+		lineageTag: 08058df5-515e-448c-8369-bfc7c5b0de22
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Power YOY%' =
+			
+			IF(
+			    ISBLANK([Top 3 Power 2PY]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Top 3 Power PY] - [Top 3 Power 2PY]),
+			        [Top 3 Power 2PY]
+			    )
+			)
+		displayFolder: Card_Power\Top3
+		lineageTag: 4c369ca1-b6bc-435f-8a1e-5aa78b52fb9a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Power YOY%' =
+			
+			IF(
+			    ISBLANK([Top 4 Power 2PY]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Top 4 Power PY] - [Top 4 Power 2PY]),
+			        [Top 4 Power 2PY]
+			    )
+			)
+		displayFolder: Card_Power\Top4
+		lineageTag: eff3c9d7-c0d5-4185-a44c-8175489724b3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Power YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 3 Power YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 3 Power YOY%]>0, UNICHAR(129129),
+			    [Top 3 Power YOY%]=0, UNICHAR(129130),
+			    [Top 3 Power YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Power\Top3
+		lineageTag: 196a415a-191e-4988-9a2e-1d0ad6d0745d
+
+	measure 'Top 4 Power YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 4 Power YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 4 Power YOY%]>0, UNICHAR(129129),
+			    [Top 4 Power YOY%]=0, UNICHAR(129130),
+			    [Top 4 Power YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Power\Top4
+		lineageTag: dbc2a4c1-f192-44ed-9b85-ce48e937a060
+
+	measure 'Top Power Card Title' =
+			SWITCH( [Language],
+			  "es-ES", "Top 4 Fuentes (MW)",
+			  "pt-PT", "Top 4 Fontes (MW)",
+			  "en-US", "Top 4 Sources (MW)"
+			)
+		displayFolder: Translate\Power
+		lineageTag: 9f79deaa-cfc2-4f17-8cfd-a8d19976e3c9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'France Exchange' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 1
+			)
+		formatString: #,0.00
+		displayFolder: Card_Exchange\France
+		lineageTag: 5b730453-e1aa-4540-857e-63482eaf1570
+
+	measure 'Morroco Exchange' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 2
+			)
+		formatString: #,0.00
+		displayFolder: Card_Exchange\Morocco
+		lineageTag: 9e7ac8ec-3233-4764-82a5-fa32e5ebaed0
+
+	measure 'Portugal Exchange' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 3
+			)
+		formatString: #,0.00
+		displayFolder: Card_Exchange\Portugal
+		lineageTag: dfe78f90-2d20-4351-966e-3199cff207cb
+
+	measure 'Andorra Exchange' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 0
+			)
+		formatString: #,0.00
+		displayFolder: Card_Exchange\Andorra
+		lineageTag: 525c7d8e-17d3-4d02-afcf-218421858b1d
+
+	measure 'France Name' =
+			SWITCH( [Language],
+			  "es-ES", "Francia",
+			  "pt-PT", "França",
+			  "en-US", "France"
+			)
+		displayFolder: Card_Exchange\France
+		lineageTag: a2439d03-18c2-4a03-a8e7-2d24f16efea3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Morocco Name' =
+			SWITCH( [Language],
+			  "es-ES", "Marruecos",
+			  "pt-PT", "Marrocos",
+			  "en-US", "Morocco"
+			)
+		displayFolder: Card_Exchange\Morocco
+		lineageTag: 1bcc6e79-612b-4d82-a57b-84d77903a295
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Andorra Exchange YTD' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 0,
+			    'Calendar'[Year] = YEAR(TODAY())
+			)
+		displayFolder: Card_Exchange\Andorra
+		lineageTag: b66afe21-65c6-4276-8986-80e2b89e8d7d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'France Exchange YTD' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 1,
+			    'Calendar'[Year] = YEAR(TODAY())
+			)
+		displayFolder: Card_Exchange\France
+		lineageTag: 0c86bb13-fd01-4ef7-914e-83d081ae30bd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Andorra Exchange PY' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 0,
+			    'Calendar'[Year] = YEAR(TODAY())-1
+			)
+		displayFolder: Card_Exchange\Andorra
+		lineageTag: 9eeb07ac-f2d9-4319-98ee-8e8a77e3b3d6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'France Exchange PY' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 1,
+			    'Calendar'[Year] = YEAR(TODAY())-1
+			)
+		displayFolder: Card_Exchange\France
+		lineageTag: ceddff9a-918f-4f96-a30d-50f263b7b84e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Morocco Exchange PY' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 2,
+			    'Calendar'[Year] = YEAR(TODAY())-1
+			)
+		displayFolder: Card_Exchange\Morocco
+		lineageTag: 3857030c-9f3f-4a18-99a5-82d679486a8a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Portugal Exchange PY' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 3,
+			    'Calendar'[Year] = YEAR(TODAY())-1
+			)
+		displayFolder: Card_Exchange\Portugal
+		lineageTag: 7a564bf4-7212-46e3-9c8c-d7829ec18d18
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Andorra Exchange PY YTD' =
+			
+			CALCULATE(
+			    [Andorra Exchange PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Inter)]
+			    )
+			)
+		displayFolder: Card_Exchange\Andorra
+		lineageTag: 1678a729-ae46-4343-94ff-3052d1bc8c9c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'France Exchange PY YTD' =
+			
+			CALCULATE(
+			    [France Exchange PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Inter)]
+			    )
+			)
+		displayFolder: Card_Exchange\France
+		lineageTag: 0477d65b-8e5f-48c7-8864-82042fec0488
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Morocco Exchange PY YTD' =
+			
+			CALCULATE(
+			    [Morocco Exchange PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Inter)]
+			    )
+			)
+		displayFolder: Card_Exchange\Morocco
+		lineageTag: 600cdedd-92fe-4ff8-bee1-bf4e14438d84
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Portugal Exchange PY YTD' =
+			
+			CALCULATE(
+			    [Portugal Exchange PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Inter)]
+			    )
+			)
+		displayFolder: Card_Exchange\Portugal
+		lineageTag: fa2d34f5-36c7-4dfd-b599-6789ac45ec76
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Andorra Exchange YOY%' =
+			
+			IF(
+			    ISBLANK([Andorra Exchange PY YTD]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Andorra Exchange YTD] - [Andorra Exchange PY YTD]),
+			        [Andorra Exchange PY YTD]
+			    )
+			)
+		displayFolder: Card_Exchange\Andorra
+		lineageTag: 096f7b68-67ff-42bd-8bdf-4c68306f9e72
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'France Exchange YOY%' =
+			
+			IF(
+			    ISBLANK([France Exchange PY YTD]),
+			    BLANK(),
+			    DIVIDE(
+			        ([France Exchange YTD] - [France Exchange PY YTD]),
+			        [France Exchange PY YTD]
+			    )
+			)
+		displayFolder: Card_Exchange\France
+		lineageTag: e42c19c7-00ba-48d3-83dd-c2898de987e3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Portugal Exchange YOY%' =
+			
+			IF(
+			    ISBLANK([Portugal Exchange PY YTD]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Portugal Exchange YTD] - [Portugal Exchange PY YTD]),
+			        [Portugal Exchange PY YTD]
+			    )
+			)
+		displayFolder: Card_Exchange\Portugal
+		lineageTag: f7b9a8d4-4f00-4712-a891-bd7addeecfcc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Morocco Exchange YOY%' =
+			
+			IF(
+			    ISBLANK([Morocco Exchange PY YTD]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Morocco Exchange YTD] - [Morocco Exchange PY YTD]),
+			        [Morocco Exchange PY YTD]
+			    )
+			)
+		displayFolder: Card_Exchange\Morocco
+		lineageTag: 691674bc-5b0d-483d-a952-a4a41ff43887
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Andorra YOY Label' = ```
+			
+			VAR _Value = FORMAT([Andorra Exchange YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Andorra Exchange YOY%]>0, UNICHAR(129129),
+			    [Andorra Exchange YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Exchange\Andorra
+		lineageTag: 9ebc5445-c1c5-4395-ac1a-b4f75ff68c2a
+
+	measure 'France YOY Label' = ```
+			
+			VAR _Value = FORMAT([France Exchange YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [France Exchange YOY%]>0, UNICHAR(129129),
+			    [France Exchange YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Exchange\France
+		lineageTag: 003e23d6-cd68-48ce-b53d-bac217a0ca23
+
+	measure 'Portugal YOY Label' = ```
+			
+			VAR _Value = FORMAT([Portugal Exchange YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Portugal Exchange YOY%]>0, UNICHAR(129129),
+			    [Portugal Exchange YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Exchange\Portugal
+		lineageTag: 066e9fe5-02bf-44db-91a6-248cc3fc1849
+
+	measure 'Morocco YOY Label' = ```
+			
+			VAR _Value = FORMAT([Morocco Exchange YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Morocco Exchange YOY%]>0, UNICHAR(129129),
+			    [Morocco Exchange YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Exchange\Morocco
+		lineageTag: d5efb162-907b-4d47-b639-41755f2865f0
+
+	measure 'Morocco Exchange YTD' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 2,
+			    'Calendar'[Year] = YEAR(TODAY())
+			)
+		displayFolder: Card_Exchange\Morocco
+		lineageTag: b632bfdd-6f1f-48c8-aa0a-6b0e7b305ab3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Portugal Exchange YTD' =
+			
+			CALCULATE(
+			    [Energy International Exchange (GWh)],
+			    Country[CountryID] = 3,
+			    'Calendar'[Year] = YEAR(TODAY())
+			)
+		displayFolder: Card_Exchange\Portugal
+		lineageTag: e4cfe70e-65aa-4a54-8153-66a4de06c277
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Source name' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _1Source = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 1
+			    ),
+			    Source[SourceId]
+			)
+			RETURN
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationEnglish]),
+			        FILTER(Source, Source[SourceId] = _1Source)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationSpanish]),
+			        FILTER(Source, Source[SourceId] = _1Source)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationPortuguese]),
+			        FILTER(Source, Source[SourceId] = _1Source)
+			    )
+			)
+			```
+		displayFolder: Card_Source\Top1
+		lineageTag: bebd9176-a682-4809-8e3f-7bc735c44b7b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Source name' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _2Source = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 2
+			    ),
+			    Source[SourceId]
+			)
+			RETURN
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationEnglish]),
+			        FILTER(Source, Source[SourceId] = _2Source)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationSpanish]),
+			        FILTER(Source, Source[SourceId] = _2Source)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationPortuguese]),
+			        FILTER(Source, Source[SourceId] = _2Source)
+			    )
+			)
+			```
+		displayFolder: Card_Source\Top2
+		lineageTag: 23e5883a-3b97-459e-87ce-aa210159eddf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Source name' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _3Source = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 3
+			    ),
+			    Source[SourceId]
+			)
+			RETURN
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationEnglish]),
+			        FILTER(Source, Source[SourceId] = _3Source)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationSpanish]),
+			        FILTER(Source, Source[SourceId] = _3Source)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationPortuguese]),
+			        FILTER(Source, Source[SourceId] = _3Source)
+			    )
+			)
+			```
+		displayFolder: Card_Source\Top3
+		lineageTag: 3789ff78-3188-4be2-8c48-fb02185728b7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Source name' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _4Source = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 4
+			    ),
+			    Source[SourceId]
+			)
+			RETURN
+			SWITCH(
+			    SELECTEDVALUE(Languages[LanguageID]),
+			    "en", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationEnglish]),
+			        FILTER(Source, Source[SourceId] = _4Source)
+			    ),
+			    "es", 
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationSpanish]),
+			        FILTER(Source, Source[SourceId] = _4Source)
+			    ),
+			    "pt",
+			    CALCULATE(
+			        MAX('Source'[SourceTranslationPortuguese]),
+			        FILTER(Source, Source[SourceId] = _4Source)
+			    )
+			)
+			```
+		displayFolder: Card_Source\Top4
+		lineageTag: 58738fb3-b3c4-46a9-8b8a-e1d131272e38
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Source YTD' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _1Region = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 1
+			    ),
+			    CALCULATE(
+			        [Generation (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY()))
+			    ) 
+			)
+			
+			RETURN
+			_1Region
+			```
+		displayFolder: Card_Source\Top1
+		lineageTag: 9e83690a-56bf-4340-9f71-a8cbb93f6448
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Source YTD' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 2
+			    ),
+			    CALCULATE(
+			        [Generation (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY()))
+			    ) 
+			)
+			
+			RETURN
+			_2Region
+			```
+		displayFolder: Card_Source\Top2
+		lineageTag: a1140b13-fcf4-4dee-84a5-c1168ee8c45c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Source YTD' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 3
+			    ),
+			    CALCULATE(
+			        [Generation (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY()))
+			    ) 
+			)
+			
+			RETURN
+			_3Region
+			```
+		displayFolder: Card_Source\Top3
+		lineageTag: 4f6a3bb4-c5c5-4cae-acec-44a7596caaa1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Source YTD' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 4
+			    ),
+			    CALCULATE(
+			        [Generation (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY()))
+			    ) 
+			)
+			
+			RETURN
+			_4Region
+			```
+		displayFolder: Card_Source\Top4
+		lineageTag: 8a4ef84f-c39e-455f-b8b0-b4f9bd531e11
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Source PY' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _1Region = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 1
+			    ),
+			    CALCULATE(
+			        [Generation (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_1Region
+			```
+		displayFolder: Card_Source\Top1
+		lineageTag: 200411e7-cf91-403e-bc28-0cfc4b731379
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Source PY' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _2Region = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 2
+			    ),
+			    CALCULATE(
+			        [Generation (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_2Region
+			```
+		displayFolder: Card_Source\Top2
+		lineageTag: 2fd70f8a-e6ef-4602-9418-a722d42acc8c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Source PY' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _3Region = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 3
+			    ),
+			    CALCULATE(
+			        [Generation (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_3Region
+			```
+		displayFolder: Card_Source\Top3
+		lineageTag: c8925b4b-8bbd-4e9b-8f3f-e73053877ff8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Source PY' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _4Region = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 4
+			    ),
+			    CALCULATE(
+			        [Generation (GWh)],
+			        'Calendar'[Year] = (YEAR(TODAY())-1)
+			    ) 
+			)
+			
+			RETURN
+			_4Region
+			```
+		displayFolder: Card_Source\Top4
+		lineageTag: 1f0de6bf-96e6-4918-aea1-473eb76051b8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Source PY YTD' =
+			
+			CALCULATE(
+			    [Top 1 Source PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Balance)]
+			    )
+			)
+		displayFolder: Card_Source\Top1
+		lineageTag: 0ef8fea9-a8a8-4c14-a6da-8b551c518e12
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Source PY YTD' =
+			
+			CALCULATE(
+			    [Top 2 Source PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Balance)]
+			    )
+			)
+		displayFolder: Card_Source\Top2
+		lineageTag: 8763508c-5127-4942-94b9-58529cb07376
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Source PY YTD' =
+			
+			CALCULATE(
+			    [Top 3 Source PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Balance)]
+			    )
+			)
+		displayFolder: Card_Source\Top3
+		lineageTag: 4217d8a3-6c52-4877-b6a3-3769b68ab2d0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Source PY YTD' =
+			
+			CALCULATE(
+			    [Top 4 Source PY],
+			    FILTER(
+			        'Calendar',
+			        'Calendar'[MonthNumber] <= [MonthLastUpdate (Balance)]
+			    )
+			)
+		displayFolder: Card_Source\Top4
+		lineageTag: 26488e44-529d-4622-ae5c-16d9860a4ffb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Source YOY%' =
+			
+			IF(
+			    ISBLANK([Top 1 Source PY YTD]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Top 1 Source YTD] - [Top 1 Source PY YTD]),
+			        [Top 1 Source PY YTD]
+			    )
+			)
+		displayFolder: Card_Source\Top1
+		lineageTag: 93d42e8c-06af-4ec9-bf21-3874e47ff231
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Source YOY%' =
+			
+			IF(
+			    ISBLANK([Top 2 Source PY YTD]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Top 2 Source YTD] - [Top 2 Source PY YTD]),
+			        [Top 2 Source PY YTD]
+			    )
+			)
+		displayFolder: Card_Source\Top2
+		lineageTag: c130db2e-9afb-4332-a254-37270dccc7ca
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Source YOY%' =
+			
+			IF(
+			    ISBLANK([Top 3 Source PY YTD]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Top 3 Source YTD] - [Top 3 Source PY YTD]),
+			        [Top 3 Source PY YTD]
+			    )
+			)
+		displayFolder: Card_Source\Top3
+		lineageTag: 8053649b-8f14-4c46-a8d4-39eb082509e6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Source YOY%' =
+			
+			IF(
+			    ISBLANK([Top 4 Source PY YTD]),
+			    BLANK(),
+			    DIVIDE(
+			        ([Top 4 Source YTD] - [Top 4 Source PY YTD]),
+			        [Top 4 Source PY YTD]
+			    )
+			)
+		displayFolder: Card_Source\Top4
+		lineageTag: b18ae338-fd32-4185-be04-48c9fd167bc2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Source YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 1 Source YOY%], "##0.##%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 1 Source YOY%]>0, UNICHAR(129129),
+			    [Top 1 Source YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Source\Top1
+		lineageTag: 308c667c-879c-4733-a497-f7b1b19f3304
+
+	measure 'Top 2 Source YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 2 Source YOY%], "##0.##%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 2 Source YOY%]>0, UNICHAR(129129),
+			    [Top 2 Source YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Source\Top2
+		lineageTag: 4190bade-91f5-45f4-89ce-4b3463323131
+
+	measure 'Top 3 Source YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 3 Source YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 3 Source YOY%]>0, UNICHAR(129129),
+			    [Top 3 Source YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Source\Top3
+		lineageTag: 0e1e1239-2cd4-49ac-9af4-0fcb9197bcb3
+
+	measure 'Top 4 Source YOY Label' = ```
+			
+			VAR _Value = FORMAT([Top 4 Source YOY%], "##0.00%", "es-ES")
+			VAR _Arrow = 
+			SWITCH(
+			    TRUE(),
+			    [Top 4 Source YOY%]>0, UNICHAR(129129),
+			    [Top 4 Source YOY%]<0, UNICHAR(129131)
+			)
+			VAR _Space = REPT(" ",2)
+			VAR _Label = UNICHAR(10)&"YOY:"&_Space & _Value & " " & _Arrow
+			RETURN 
+			    _Label
+			```
+		displayFolder: Card_Source\Top4
+		lineageTag: 79f68e3e-4ea2-4bf1-af0a-419f0457b998
+
+	measure 'Top Source Card Title' =
+			SWITCH( [Language],
+			  "es-ES", "Top 4 Fuentes (GWh)",
+			  "pt-PT", "Top 4 Fontes (GWh)",
+			  "en-US", "Top 4 Sources (GWh)"
+			)
+		displayFolder: Translate\Generation
+		lineageTag: 21754c06-bcc5-4b65-8687-4f3d198dda30
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Balance Source Title' =
+			SWITCH( [Language],
+			  "es-ES", "Balance Eléctrico por Fuente de Energía (GWh)",
+			  "pt-PT", "Balanço Elétrico por Fonte de Energia (GWh)",
+			  "en-US", "Electrical Energy Balance by Source (GWh)"
+			)
+		displayFolder: Translate\Balance
+		lineageTag: f549864f-dc1a-477f-a8f6-2c0c9899dc34
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Generatio Top4 Ren. Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de las Top 4 Fuente de Energía Renovables (GWh)",
+			  "pt-PT", "Evolução das Top 4 Fontes de Energia Renováveis (GWh)",
+			  "en-US", "Energy Top 4 Renewable Sources Evolution (GWh)"
+			)
+		displayFolder: Translate\Generation
+		lineageTag: f8b62c64-160b-4f0d-af8e-88220d7ceb7a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Generatio Top4 Non-Ren. Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de las Top 4 Fuente de Energía No-Renovables (GWh)",
+			  "pt-PT", "Evolução das Top 4 Fontes de Energia Não-Renováveis (GWh)",
+			  "en-US", "Energy Top 4 Non-Renewable Sources Evolution (GWh)"
+			)
+		displayFolder: Translate\Generation
+		lineageTag: 24324af4-59f8-491a-8219-43610df0bd8b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Generation total Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de la Generación Total (GWh)",
+			  "pt-PT", "Evolução da Geração Total (GWh)",
+			  "en-US", "Total Generation Evolution (GWh)"
+			)
+		displayFolder: Translate\Generation
+		lineageTag: 5b025a25-9ca0-4a44-9855-39042c18554b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'CCAA Generation Title' =
+			SWITCH( [Language],
+			  "es-ES", "Generación por región (GWh)",
+			  "pt-PT", "Geração por Região (GWh)",
+			  "en-US", "Region Generation (GWh)"
+			)
+		displayFolder: Translate\Regions
+		lineageTag: e8b2ca8e-5aed-4cf0-bf77-3862b6d68bdb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Power Ev. by Source Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de la Potencia Instalada por Fuente de Energía - Top 6 (MW)",
+			  "pt-PT", "Evolução da Potência Instalada por Fonte de Energia - Top 6 (MW)",
+			  "en-US", "Power Installed Evolution by Source of Energy - Top 6 (MW)"
+			)
+		displayFolder: Translate\Power
+		lineageTag: 3700b764-69b2-44b3-b806-ae38f036e56a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Power Ev. by Category Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de la Potencia Instalada: Renovable vs No-Renovable (MW)",
+			  "pt-PT", "Evolução da Potência Instalada: Renovável vs Não-Renovável (MW)",
+			  "en-US", "Power Installed Evolution: Renewable vs Non-Renewable (MW)"
+			)
+		displayFolder: Translate\Power
+		lineageTag: ad14ec29-0dd5-4a7d-8af3-7b4f6c5e0d1d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Region Top4 Title' =
+			SWITCH( [Language],
+			  "es-ES", "Evolución de la Generación por Región - Top 4 (GWh)",
+			  "pt-PT", "Evolução da Geração por Região - Top 4 (GWh)",
+			  "en-US", "Generatio Evolution by Region - Top 4 (GWh)"
+			)
+		displayFolder: Translate\Regions
+		lineageTag: 83ecf710-85f8-4bca-a215-f6330c47680d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Source' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _1Source = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 1
+			    ),
+			    [Generation (GWh)]
+			)
+			
+			RETURN
+			_1Source
+			```
+		displayFolder: Card_Source\Top1
+		lineageTag: f678e9b3-637e-4610-86cd-47447764310d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 2 Source' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _2Source = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 2
+			    ),
+			    [Generation (GWh)]
+			)
+			
+			RETURN
+			_2Source
+			```
+		displayFolder: Card_Source\Top2
+		lineageTag: 69dece23-4b1e-413d-bcaf-799f699badba
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 3 Source' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _3Source = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 3
+			    ),
+			    [Generation (GWh)]
+			)
+			
+			RETURN
+			_3Source
+			```
+		displayFolder: Card_Source\Top3
+		lineageTag: a84ff2c2-c7f9-4584-8238-fa173134f040
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 4 Source' = ```
+			
+			VAR SourceAndEnergy = 
+			    ADDCOLUMNS(
+			        VALUES(Source[SourceId]),
+			        "rank", RANKX(Source, [Generation (GWh)])
+			    )
+			VAR _4Source = 
+			MINX(
+			    FILTER(
+			        SourceAndEnergy,
+			        [rank] = 4
+			    ),
+			    [Generation (GWh)]
+			)
+			
+			RETURN
+			_4Source
+			```
+		displayFolder: Card_Source\Top4
+		lineageTag: 1647895c-a1c3-4f44-9302-c0cad57643b4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page1 Button Title' =
+			SWITCH( [Language],
+			  "es-ES", "Balance",
+			  "pt-PT", "Balanço",
+			  "en-US", "Balance"
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: 8acb30b0-480a-4951-bc96-bba46a4b064c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page2 Button Title' =
+			SWITCH( [Language],
+			  "es-ES", "Generación",
+			  "pt-PT", "Geração",
+			  "en-US", "Generation"
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: aebd065e-bb3d-49db-ba0e-3c83e665912e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page3 Button Title' =
+			SWITCH( [Language],
+			  "es-ES", "Regiones",
+			  "pt-PT", "Regiões",
+			  "en-US", "Regions"
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: b7aece05-06e5-4ade-8ffd-d83451bf4e2e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page4 Button Title' =
+			SWITCH( [Language],
+			  "es-ES", "Potencia",
+			  "pt-PT", "Potência",
+			  "en-US", "Capacity"
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: ad0e82e1-68a5-43af-9dc5-9f0a71745289
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Page5 Button Title' =
+			SWITCH( [Language],
+			  "es-ES", "Intercambio",
+			  "pt-PT", "Intercâmbio",
+			  "en-US", "Exchange"
+			)
+		displayFolder: Translate\titles_buttons_pages
+		lineageTag: 953b3540-ab98-4f89-98fa-ce312bccc5a7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Capacity Last Update' = CALCULATE(MAX(fact_capacity[Year]) , ALL('Calendar'))
+		formatString: 0
+		displayFolder: LastUpdate
+		lineageTag: 44bf3a1b-7b19-4284-a4c9-325bc6a1050d
+
+	measure 'Last Update Power Title' = ```
+			
+			VAR _Lastupdt = [Capacity Last Update]
+			VAR _Label = 
+			SWITCH( [Language],
+			  "es-ES", "Última Atualización:"& UNICHAR(10) & "fin de " & _Lastupdt,
+			  "pt-PT", "Última Atualização:" & UNICHAR(10) & "fim de " & _Lastupdt,
+			  "en-US", "Last Update:  " & "  "& UNICHAR(10) & " end of "& _Lastupdt
+			)
+			RETURN 
+			    _Label
+			```
+		displayFolder: LastUpdate
+		lineageTag: db6a479a-a768-469e-8a61-5d731788fabc
+
+	measure 'Absolute Label' =
+			SWITCH( [Language],
+			  "es-ES", "Absoluto",
+			  "pt-PT", "Absoluto",
+			  "en-US", "Absolute"
+			)
+		displayFolder: Translate\General
+		lineageTag: ac41d46f-8f5a-4447-bf16-8187c9fe78c0
+
+	measure 'Percentage Label' =
+			SWITCH( [Language],
+			  "es-ES", "Porcentaje",
+			  "pt-PT", "Porcentagem",
+			  "en-US", "Percentage"
+			)
+		displayFolder: Translate\General
+		lineageTag: 03f38ea0-c3d7-4c02-b453-6b2816f16cf3
+
+	partition 'Measures Table' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,60 @@
+table Param_Abs_Perc_Demand
+	lineageTag: b9f4bf13-7982-42be-901d-7b8b4d3dfc80
+
+	column Abs_Per
+		lineageTag: 472a5b8f-0288-487a-893a-3b110c958580
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Param_Abs_Perc Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Param_Abs_Perc Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_Abs_Perc Fields'
+		isHidden
+		lineageTag: 5758b1ad-52ca-4419-8490-72fe6ce31d49
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Param_Abs_Perc Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_Abs_Perc Order'
+		isHidden
+		formatString: 0
+		lineageTag: 728aa76b-37b1-4d53-a014-db0619fd5dad
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: 3a80e1bf-dd3b-4a55-8c53-40f6d506602e
+		summarizeBy: none
+		sourceColumn: [Value4]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Param_Abs_Perc_Demand = calculated
+		mode: import
+		source =
+				{
+				    ("Absolute", NAMEOF('Measures Table'[Demand (GWh)]), 0, "en"),
+				    ("Absoluto", NAMEOF('Measures Table'[Demand (GWh)]), 0 , "es"),
+				    ("Absoluto", NAMEOF('Measures Table'[Demand (GWh)]), 0 , "pt"),
+				    ("Percentage", NAMEOF('Measures Table'[Demand Ratio]), 1, "en"),
+				    ("Porcentaje", NAMEOF('Measures Table'[Demand Ratio]), 1, "es"),
+				    ("Percentagem", NAMEOF('Measures Table'[Demand Ratio]), 1, "pt")
+				}
+
+	annotation PBI_Id = ab8c07e3bade49eaa29d9bfdeff9391d
+

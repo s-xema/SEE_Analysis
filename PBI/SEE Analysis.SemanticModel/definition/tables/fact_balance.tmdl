@@ -1,0 +1,45 @@
+table fact_balance
+	lineageTag: 7d1f8ab0-9f71-4e44-bede-9410e7268110
+
+	column SourceID
+		dataType: string
+		lineageTag: 1c7ec04b-db03-4a88-a676-18325c925bc4
+		summarizeBy: none
+		sourceColumn: SourceID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Energy
+		dataType: double
+		formatString: #,0
+		lineageTag: dbde2be1-44de-4a4f-b1eb-390f81bfdd5d
+		summarizeBy: sum
+		sourceColumn: Energy
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 29ec16ba-9ebc-4296-97d5-32bd7e9ec038
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_balance = m
+		mode: import
+		queryGroup: FactGroup
+		source =
+				let
+				    Source = Sql.Database("gwtklgmkmwquvafrpm5qo4pjdm-az7hilevrpdenkbtmsiemdzchy.datawarehouse.pbidedicated.windows.net", "DWH_Balance_electrico"),
+				    dbo_fact_balance = Source{[Schema="dbo",Item="fact_balance"]}[Data],
+				    #"Renamed Columns" = Table.RenameColumns(dbo_fact_balance,{{"id", "SourceID"}, {"value", "Energy"}, {"date", "Date"}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each [Energy] > 0.001 or [Energy] < -0.001)
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_ResultType = Exception
+

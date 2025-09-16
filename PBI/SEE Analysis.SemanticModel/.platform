@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "SEE Analysis"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "406510e3-4ea5-a5bf-4f80-7547ad6f9cbf"
+  }
+}

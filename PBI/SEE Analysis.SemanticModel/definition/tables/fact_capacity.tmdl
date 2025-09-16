@@ -1,0 +1,41 @@
+table fact_capacity
+	lineageTag: 28b1ca79-703f-44a8-b6ca-ca76be080487
+
+	column SourceId
+		dataType: string
+		lineageTag: 98fb912c-031b-4bae-9b64-bc1a0427bdef
+		summarizeBy: none
+		sourceColumn: SourceId
+
+		annotation SummarizationSetBy = Automatic
+
+	column Power
+		dataType: double
+		lineageTag: 7627a287-1760-4483-8d17-acf3afdf438f
+		summarizeBy: sum
+		sourceColumn: Power
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: a094378e-b5f8-4a8e-8e01-2e92c2d850b1
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_capacity = m
+		mode: import
+		queryGroup: FactGroup
+		source =
+				let
+				    Source = Table.Combine({fact_capacity_18_to_22, fact_capacity_23_to_lastyear})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

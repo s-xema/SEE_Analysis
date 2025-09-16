@@ -1,0 +1,50 @@
+table fact_inter
+	lineageTag: 553cdeb9-9694-4f31-9bbf-d1f7e950982d
+
+	column CountryID
+		dataType: string
+		lineageTag: 15f2b074-a899-494b-889f-53d682248624
+		summarizeBy: none
+		sourceColumn: CountryID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Energy
+		dataType: double
+		lineageTag: df59f170-d67a-4d09-9ba5-f6d15d5af2a6
+		summarizeBy: sum
+		sourceColumn: Energy
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: acf8f6e2-bec5-4e50-8cd2-ab3f81041812
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_inter = m
+		mode: import
+		queryGroup: FactGroup
+		source =
+				let
+				    Source = Sql.Databases("gwtklgmkmwquvafrpm5qo4pjdm-az7hilevrpdenkbtmsiemdzchy.datawarehouse.pbidedicated.windows.net", [HierarchicalNavigation=true]),
+				    DWH_Balance_electrico = Source{[Name="DWH_Balance_electrico"]}[Data],
+				    dbo = DWH_Balance_electrico{[Schema="dbo"]}[Data],
+				    fact_inter1 = dbo{[Name="fact_inter"]}[Data],
+				    #"Added Conditional Column" = Table.AddColumn(fact_inter1, "Custom", each if [country] = "andorra" or [country] = "Andorra" then 0 else if [country] = "francia" or [country] = "Francia" then 1 else if [country] = "marruecos" or [country] = "Marruecos" then 2 else if [country] = "portugal" or [country] = "Portugal" then 3 else 4),
+				    #"Removed Columns" = Table.RemoveColumns(#"Added Conditional Column",{"country"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Removed Columns",{"Custom", "value", "date"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Reordered Columns",{{"Custom", "CountryID"}, {"value", "Energy"}, {"date", "Date"}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"CountryID", type text}}),
+				    #"Removed less than 0.001" = Table.SelectRows(#"Changed Type", each [Energy] > 0.001 or [Energy] < -0.001)
+				in
+				    #"Removed less than 0.001"
+
+	annotation PBI_ResultType = Table
+

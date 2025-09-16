@@ -1,0 +1,58 @@
+table 'Translated Month Short'
+	lineageTag: cfa41f6f-6417-4e43-9223-9ba1aa1240da
+
+	column MonthShort
+		lineageTag: dc86f15b-8b5d-465c-b195-fbcfa68c69b8
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: ShortOrder
+
+		relatedColumnDetails
+			groupByColumn: Fields
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fields
+		isHidden
+		lineageTag: 4036aaf2-cd05-4d58-a06d-655f244aa00f
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: ShortOrder
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column ShortOrder
+		isHidden
+		formatString: 0
+		lineageTag: 98b68e81-8a30-482d-8ff9-995ecfc5244d
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: e6fbbe1e-f580-475f-a4c0-e845ef79fbc9
+		summarizeBy: none
+		sourceColumn: [Value4]
+		sortByColumn: ShortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Translated Month Short' = calculated
+		mode: import
+		source =
+				{
+				    ("Month", NAMEOF('Calendar'[MonthShortEN]), 0, "en"),
+				    ("Mes", NAMEOF('Calendar'[MonthShortES]), 1, "es"),
+				    ("Mês", NAMEOF('Calendar'[MonthShortPT]), 2, "pt")
+				}
+
+	annotation PBI_Id = 5e50174eab8e4b65a912860a309a655a
+

@@ -1,0 +1,136 @@
+table Calendar
+	lineageTag: ee14bada-e2e6-45ea-b9a1-d50e59999304
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: 5e6ac08c-f85b-4019-9736-e42eb869b056
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 788fa4d2-4c3e-4c70-a20f-245cfca957b3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = User
+
+	column MonthNumber
+		formatString: 0
+		lineageTag: 122a1a95-01ff-47ac-ac25-124ec7c72d0a
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [MonthNumber]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNameES
+		lineageTag: 1b4cbf19-7388-428d-a19f-b799f58af213
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthNameES]
+		sortByColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNameEN
+		lineageTag: e4d0f07d-b427-47bf-ac9b-88ab84ea8ba6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthNameEN]
+		sortByColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthShortEN
+		lineageTag: 528f8830-30e0-4d11-9461-566e2fa367f6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthShortEN]
+		sortByColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthShortES
+		lineageTag: c68137dd-9203-43e4-aa94-9602f8e34cda
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthShortES]
+		sortByColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthShortPT
+		lineageTag: 756a5837-80ee-4e30-9ee6-d685dfcd7dd9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthShortPT]
+		sortByColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNamePT
+		lineageTag: 12d89714-7106-43d4-8cf4-1b0370f71712
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthNamePT]
+		sortByColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthDay
+		formatString: 0
+		lineageTag: a78e40a2-5651-455a-ad69-4bea93da13f3
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [MonthDay]
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekDay
+		formatString: 0
+		lineageTag: 96c9dde4-4786-41ed-a1ef-e224f1fa321c
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [WeekDay]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: 10afe910-a317-4ccc-95ce-553d81f92933
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendar = calculated
+		mode: import
+		source = ```
+				
+				Var CalenderStart = Date(Year(Min(fact_balance[Date])) , 1, 1)  
+				Var CalendarEnd = Date(Year(MAX(fact_balance[Date])), 12, 31)
+				Return ADDCOLUMNS(
+				    CALENDAR(CalenderStart, CalendarEnd),
+				    "Year", Year([Date]),
+				    "Quarter", YEAR([Date]) & " Q" & QUARTER([Date]),
+				    "MonthNumber", MONTH([Date]),
+				    "MonthShortEN", FORMAT([Date],"MMM", "en-US"),
+				    "MonthShortES", FORMAT([Date],"MMM", "es-ES"),
+				    "MonthShortPT", FORMAT([Date],"MMM", "pt-PT"),
+				    "MonthNameEN", FORMAT([Date],"MMMM", "en-US"),
+				    "MonthNameES", FORMAT([Date],"MMMM", "es-ES"),
+				    "MonthNamePT", FORMAT([Date],"MMMM", "pt-PT"),
+				    "MonthDay", DAY([Date]),
+				    "WeekDay", WEEKDAY([Date])
+				)
+				```
+
+	annotation PBI_Id = 24e21a9aa72845e3a2bd862fe3b9aac6
+

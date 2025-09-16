@@ -1,0 +1,57 @@
+table 'Translated Country Names'
+	lineageTag: 28c7a9b1-1d08-430b-8fea-5171076a63fd
+
+	column Country
+		lineageTag: 30f2dddd-f9b1-4cdb-8631-09519b2ec797
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: SortOrder
+
+		relatedColumnDetails
+			groupByColumn: Fields
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fields
+		isHidden
+		lineageTag: f7f1576c-8d83-4b1c-8048-79d1a17dc5f4
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: SortOrder
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		isHidden
+		formatString: 0
+		lineageTag: 998ff196-b5b3-487f-aadc-5c002075b632
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: ce0684c0-5c88-4ebd-bfab-6ce03c7405aa
+		summarizeBy: none
+		sourceColumn: [Value4]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Translated Country Names' = calculated
+		mode: import
+		source =
+				{
+				    ("Country", NAMEOF('Country'[CountryTranslationEnglish]), 0, "en"),
+				    ("País", NAMEOF('Country'[CountryTranslationSpanish]), 1, "es"),
+				    ("País", NAMEOF('Country'[CountryTranslationPortuguese]), 2, "pt")
+				}
+
+	annotation PBI_Id = fd775dfbf75346d2975fa29da00700ac
+

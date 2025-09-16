@@ -1,0 +1,57 @@
+table 'Translated Region Names'
+	lineageTag: ea43146f-11da-4ce6-9400-7b9186a12dcc
+
+	column Region
+		lineageTag: bd7f89b1-1d6f-43c1-87df-6d1a5989625b
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: SortOrder
+
+		relatedColumnDetails
+			groupByColumn: Fields
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fields
+		isHidden
+		lineageTag: f688f9e4-900e-43a5-be6b-ddfa33872dff
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: SortOrder
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		isHidden
+		formatString: 0
+		lineageTag: 78bc32c9-c139-4c29-acfa-0caf8cec09fa
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: e4ceec2a-963b-4aca-bc12-3040e27ac4c8
+		summarizeBy: none
+		sourceColumn: [Value4]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Translated Region Names' = calculated
+		mode: import
+		source =
+				{
+				    ("Region", NAMEOF('Region'[RegionTranslateEnglish]), 0, "en"),
+				    ("Región", NAMEOF('Region'[RegionTranslateSpanish]), 1, "es"),
+				    ("Região", NAMEOF('Region'[RegionTranslatePortuguese]), 2, "pt")
+				}
+
+	annotation PBI_Id = edffdb631daf447bb21921b968f5f7c8
+

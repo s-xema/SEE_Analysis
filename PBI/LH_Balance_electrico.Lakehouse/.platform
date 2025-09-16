@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Lakehouse",
+    "displayName": "LH_Balance_electrico"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "1d04b850-cdfb-b4d6-4fcb-6698163a4728"
+  }
+}

@@ -1,0 +1,57 @@
+table 'Translated Year Name'
+	lineageTag: 71cb6f5c-6279-420e-aef5-eb36b83b2d7c
+
+	column Year
+		lineageTag: 84d59868-4209-4108-80d8-f77636a5cb29
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: SortOrder
+
+		relatedColumnDetails
+			groupByColumn: Fields
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fields
+		isHidden
+		lineageTag: 09e13298-2807-474c-8604-c8f225bcae65
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: SortOrder
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		isHidden
+		formatString: 0
+		lineageTag: 2edb3d14-5f0b-41b7-bc6c-29dd98fc99dc
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: f6e6dc23-ecaf-49d1-aabe-72169adb6028
+		summarizeBy: none
+		sourceColumn: [Value4]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Translated Year Name' = calculated
+		mode: import
+		source =
+				{
+				    ("Year", NAMEOF('Calendar'[Year]), 0, "en"),
+				    ("Año", NAMEOF('Calendar'[Year]), 1, "es"),
+				    ("Ano", NAMEOF('Calendar'[Year]), 2, "pt")
+				}
+
+	annotation PBI_Id = 4180bab064c448f58375bbd5d6dfddcd
+

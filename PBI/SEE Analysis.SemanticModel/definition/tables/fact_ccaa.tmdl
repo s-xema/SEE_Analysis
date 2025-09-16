@@ -1,0 +1,54 @@
+table fact_ccaa
+	lineageTag: e8a53064-614f-4e79-b29a-e7bfad2ca935
+
+	column RegionID
+		dataType: string
+		lineageTag: b2d65f18-b682-4a2f-8ddd-200e964f73a1
+		summarizeBy: none
+		sourceColumn: RegionID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceID
+		dataType: string
+		lineageTag: 555c0c73-631b-4d93-9ad6-c19a8b4fde8a
+		summarizeBy: none
+		sourceColumn: SourceID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Energy
+		dataType: double
+		lineageTag: 14709b1d-552d-464e-b50b-ed4ca58cd163
+		summarizeBy: sum
+		sourceColumn: Energy
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ddc27820-1050-420e-9571-82e136114284
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_ccaa = m
+		mode: import
+		queryGroup: FactGroup
+		source =
+				let
+				    Source = Sql.Databases("gwtklgmkmwquvafrpm5qo4pjdm-az7hilevrpdenkbtmsiemdzchy.datawarehouse.pbidedicated.windows.net", [HierarchicalNavigation=true]),
+				    DWH_Balance_electrico = Source{[Name="DWH_Balance_electrico"]}[Data],
+				    dbo = DWH_Balance_electrico{[Schema="dbo"]}[Data],
+				    fact_ccaa1 = dbo{[Name="fact_ccaa"]}[Data],
+				    #"Renamed Columns" = Table.RenameColumns(fact_ccaa1,{{"id", "SourceID"}, {"value", "Energy"}, {"date", "Date"}, {"ccaa", "RegionID"}}),
+				    #"Removed less than 0.001" = Table.SelectRows(#"Renamed Columns", each [Energy] > 0.001 or [Energy] < -0.001)
+				in
+				    #"Removed less than 0.001"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,59 @@
+table Region
+	lineageTag: 11b6a27b-f59c-4c21-aef8-6b3b33673db3
+
+	column RegionID
+		dataType: string
+		lineageTag: 20e62687-735d-47a5-9c8f-a6e0fd203e3c
+		summarizeBy: none
+		sourceColumn: RegionID
+
+		annotation SummarizationSetBy = Automatic
+
+	column RegionTranslateEnglish
+		dataType: string
+		lineageTag: 1b3bfe71-2ec8-4202-adbc-36f562d810cb
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: RegionTranslateEnglish
+
+		annotation SummarizationSetBy = Automatic
+
+	column RegionTranslateSpanish
+		dataType: string
+		lineageTag: 60038dfb-244c-488b-83af-5680060f8ff8
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: RegionTranslateSpanish
+
+		annotation SummarizationSetBy = Automatic
+
+	column RegionTranslatePortuguese
+		dataType: string
+		lineageTag: d8acbf46-673b-431e-bb25-1274b240d95d
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: RegionTranslatePortuguese
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Region Colours'
+		dataType: string
+		lineageTag: 765b4a1c-fb6d-4c4f-821b-fb42ea5b618d
+		summarizeBy: none
+		sourceColumn: Region Colours
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Region = m
+		mode: import
+		queryGroup: RegionGroup
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("dZK7TgMxEEV/xdqaSOQBgZJECCElCKVIE6UY1iYxcmzhByL8TZQ6BaKj3R/DM2ucd7V3jmd2xp47mRSd4qK40xxUcBKyLqvNNviKB9OLSXGFxMLM6CSqn6zWhlKuY9wH7eHF0t8OdbWiAFO7hJyXSjQGwIagyzlkpoCpAygUNBLA+pttPQPN2UDQXLl8GUk9YCpmAkka9Ja4B2V0Gi7qUH1vtU59mpcR9cC9B8H6JmhvlxE8Q7VxbAyuNDnqUUQ1TXwX50O8rDuS1S9pukS3gwvoi+Dh6JsS8NmHQuGlTipq2MYqs1gELf2Smdf4dNxKXtMIOXDGxQkqMq5/hOM8wQdYK7KCHUVJONIYlNClBM1y371u+Rz22+1w+hda5v7TW7EAHqjV+YgK0DgPoGRJi9tT1aaU+d3atDclwMqSPToVTYILQIW7wgNBQM13Qapu1Y4FuzyqJVxvs66NoFrlnbbQMNHRI2ne4IykPDTJMNg4MhuJmST7ooiupaXQ0T9bG2LRO3TF6R8=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [RegionID = _t, RegionTranslateEnglish = _t, RegionTranslateSpanish = _t, RegionTranslatePortuguese = _t]),
+				    #"Merged Queries" = Table.NestedJoin(Source, {"RegionID"}, #"Region Colours", {"RegionID"}, "Region Colours", JoinKind.LeftOuter),
+				    #"Expanded Region Colours" = Table.ExpandTableColumn(#"Merged Queries", "Region Colours", {"Region Colours"}, {"Region Colours"})
+				in
+				    #"Expanded Region Colours"
+
+	annotation PBI_ResultType = Table
+

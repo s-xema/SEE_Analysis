@@ -1,0 +1,60 @@
+table Param_Gen_ratio_CCAA
+	lineageTag: 322ceed7-4653-47a6-af04-b46907416983
+
+	column Param_Gen_ratio_CCAA
+		lineageTag: dce3163e-24b6-40a8-a352-2e8826f9c17d
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Param_Gen_ratio_CCAA Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Param_Gen_ratio_CCAA Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_Gen_ratio_CCAA Fields'
+		isHidden
+		lineageTag: 4c042875-a652-413c-9d92-62cdb0f65313
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Param_Gen_ratio_CCAA Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_Gen_ratio_CCAA Order'
+		isHidden
+		formatString: 0
+		lineageTag: 38416cea-5995-4c08-b0d4-275bdf480f7e
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: 9d67fcd9-e5c8-4bcf-8d37-47d2e7f689e6
+		summarizeBy: none
+		sourceColumn: [Value4]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Param_Gen_ratio_CCAA = calculated
+		mode: import
+		source =
+				{
+				    ("Generation", NAMEOF('Measures Table'[Energy CCAA (GWh)]), 0, "en"),
+				    ("Generación", NAMEOF('Measures Table'[Energy CCAA (GWh)]), 0 , "es"),
+				    ("Geração", NAMEOF('Measures Table'[Energy CCAA (GWh)]), 0 , "pt"),
+				    ("Percentage", NAMEOF('Measures Table'[Region Ratio]), 1, "en"),
+				    ("Porcentaje", NAMEOF('Measures Table'[Region Ratio]), 1, "es"),
+				    ("Percentagem", NAMEOF('Measures Table'[Region Ratio]), 1, "pt")
+				}
+
+	annotation PBI_Id = 3e183aed0c614c6187c05fdbaf8e3b6d
+

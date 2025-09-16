@@ -1,0 +1,48 @@
+table Param_iport_export
+	lineageTag: 61da9697-d5b3-4835-9b89-e154f00f4cf4
+
+	column Param_iport_export
+		lineageTag: 34052de9-2c6f-46bc-aa3f-624f0e75d0d4
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Param_iport_export Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Param_iport_export Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_iport_export Fields'
+		isHidden
+		lineageTag: f83a1dbe-7bdb-4745-a6e4-2192a3cd3039
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Param_iport_export Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_iport_export Order'
+		isHidden
+		formatString: 0
+		lineageTag: 230ed9a0-231a-42d0-8d08-b0edfac22687
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Param_iport_export = calculated
+		mode: import
+		source =
+				{
+				    ("Import", NAMEOF('Measures Table'[Import Energy (GWh)]), 0),
+				    ("Export", NAMEOF('Measures Table'[Export Energy (GWh)]), 1)
+				}
+
+	annotation PBI_Id = 7d53acc84e03475b93957eda8e519e73
+

@@ -1,0 +1,58 @@
+table 'Translated Category Name'
+	lineageTag: 9a0d25a9-73b5-4602-864f-6105cc7781f5
+
+	column Category
+		lineageTag: b7022837-e18b-4993-b759-6c34aceb3890
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: SortOrder
+
+		relatedColumnDetails
+			groupByColumn: Fields
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fields
+		isHidden
+		lineageTag: b81a3a6a-fd3a-457e-a7f7-8e2ad1ad34a7
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: SortOrder
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		isHidden
+		formatString: 0
+		lineageTag: fe86173a-baf1-49b1-8bfd-772371d08239
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: d08df4ac-f454-45d7-95d0-03e6611ff117
+		summarizeBy: none
+		sourceColumn: [Value4]
+		sortByColumn: SortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Translated Category Name' = calculated
+		mode: import
+		source =
+				{
+				    ("Category", NAMEOF('Source'[CategoryTranslationEnglish]), 0, "en"),
+				    ("Categoría", NAMEOF('Source'[CategoryTranslationSpanish]), 1, "es"),
+				    ("Categoria", NAMEOF('Source'[CategoryTranslationPortuguese]), 2, "pt")
+				}
+
+	annotation PBI_Id = 4d5b7362cebf48a29893cbc9cbf4240b
+

@@ -1,0 +1,423 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": {
+              "value": "SELECT max([collectdate]) maxDate from [dbo].[log_info] where [tablename1] = 'fact_ccaa'",
+              "type": "Expression"
+            },
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "linkedService": {
+              "name": "DWH_Balance_electrico",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "480b8574-7b86-434f-acb5-0ea36ee3fe14",
+                  "endpoint": "gwtklgmkmwquvafrpm5qo4pjdm-az7hilevrpdenkbtmsiemdzchy.datawarehouse.pbidedicated.windows.net"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Last_date",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "start_date",
+          "value": {
+            "value": "@addToTime(activity('Last_date').output.firstRow.maxDate,1,'Day')\n",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set start_date",
+        "dependsOn": [
+          {
+            "activity": "Last_date",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "final_date",
+          "value": {
+            "value": "@subtractFromTime(subtractFromTime(startOfMonth(convertFromUtc(utcNow(),'Romance Standard Time')),3,'Month'),1,'Minute')",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set final_date",
+        "dependsOn": [
+          {
+            "activity": "Set start_date",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "items": {
+            "value": "@variables('ccaa')",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Delete",
+              "typeProperties": {
+                "enableLogging": false,
+                "datasetSettings": {
+                  "type": "Binary",
+                  "typeProperties": {
+                    "location": {
+                      "type": "LakehouseLocation",
+                      "folderPath": "balance",
+                      "fileName": {
+                        "value": "@concat('Temp_', item())",
+                        "type": "Expression"
+                      }
+                    }
+                  },
+                  "linkedService": {
+                    "name": "LH_Balance_electrico",
+                    "properties": {
+                      "type": "Lakehouse",
+                      "typeProperties": {
+                        "artifactId": "1d04b850-cdfb-b4d6-4fcb-6698163a4728",
+                        "workspaceId": "00000000-0000-0000-0000-000000000000",
+                        "rootFolder": "Files"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "annotations": []
+                },
+                "storeSettings": {
+                  "type": "LakehouseReadSettings",
+                  "recursive": true,
+                  "enablePartitionDiscovery": false
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Delete data1",
+              "dependsOn": []
+            },
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "JsonSource",
+                  "formatSettings": {
+                    "type": "JsonReadSettings"
+                  },
+                  "storeSettings": {
+                    "type": "HttpReadSettings",
+                    "requestMethod": "GET"
+                  },
+                  "datasetSettings": {
+                    "type": "Json",
+                    "typeProperties": {
+                      "location": {
+                        "type": "HttpServerLocation",
+                        "relativeUrl": {
+                          "value": "@{concat(pipeline().parameters.category,'/', pipeline().parameters.widget, '?start_date=',variables('start_date'),'&end_date=',variables('final_date'),'&time_trunc=', pipeline().parameters.time_trunc,'&geo_trunc=electric_system&geo_limit=ccaa&geo_ids=',item())}",
+                          "type": "Expression"
+                        }
+                      }
+                    },
+                    "schema": {},
+                    "externalReferences": {
+                      "connection": "5bc7d445-6b5c-4f6d-b472-85185e872007"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "JsonSink",
+                  "formatSettings": {
+                    "type": "JsonWriteSettings"
+                  },
+                  "storeSettings": {
+                    "type": "LakehouseWriteSettings"
+                  },
+                  "datasetSettings": {
+                    "type": "Json",
+                    "typeProperties": {
+                      "location": {
+                        "type": "LakehouseLocation",
+                        "folderPath": "balance",
+                        "fileName": {
+                          "value": "@concat('Temp_', item())",
+                          "type": "Expression"
+                        }
+                      }
+                    },
+                    "schema": {},
+                    "linkedService": {
+                      "name": "LH_Balance_electrico",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "1d04b850-cdfb-b4d6-4fcb-6698163a4728",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Files"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "ExtractFromAPI",
+              "dependsOn": [
+                {
+                  "activity": "Delete data1",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "dependsOn": [
+          {
+            "activity": "API_Data_Check",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[loaddataccaa]"
+        },
+        "linkedService": {
+          "name": "DWH_Balance_electrico",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "480b8574-7b86-434f-acb5-0ea36ee3fe14",
+              "endpoint": "gwtklgmkmwquvafrpm5qo4pjdm-az7hilevrpdenkbtmsiemdzchy.datawarehouse.pbidedicated.windows.net"
+            },
+            "annotations": []
+          },
+          "objectId": "480b8574-7b86-434f-acb5-0ea36ee3fe14"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Load data into fact_ccaa",
+        "dependsOn": [
+          {
+            "activity": "Transform_Load",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "RefreshDataflow",
+        "typeProperties": {
+          "dataflowId": "daeec817-a28b-423d-b89e-1d02c00f608a",
+          "workspaceId": "2c747e06-8b95-46c6-a833-6490460f223e",
+          "notifyOption": "NoNotification"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Transform_Load",
+        "dependsOn": [
+          {
+            "activity": "ForEach1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "JsonSource",
+            "formatSettings": {
+              "type": "JsonReadSettings"
+            },
+            "storeSettings": {
+              "type": "HttpReadSettings",
+              "requestMethod": "GET"
+            }
+          },
+          "datasetSettings": {
+            "type": "Json",
+            "typeProperties": {
+              "location": {
+                "type": "HttpServerLocation",
+                "relativeUrl": {
+                  "value": "@{concat(pipeline().parameters.category,'/', pipeline().parameters.widget, '?start_date=',variables('start_date'),'&end_date=',variables('final_date'),'&time_trunc=', pipeline().parameters.time_trunc,'&geo_trunc=electric_system&geo_limit=ccaa&geo_ids=4')}",
+                  "type": "Expression"
+                }
+              }
+            },
+            "schema": {},
+            "externalReferences": {
+              "connection": "5bc7d445-6b5c-4f6d-b472-85185e872007"
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "API_Data_Check",
+        "dependsOn": [
+          {
+            "activity": "Set final_date",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Fail",
+        "typeProperties": {
+          "message": {
+            "value": "@concat('Error to get data from API dates from ', variables('final_date'), ' to ', variables('start_date'))",
+            "type": "Expression"
+          },
+          "errorCode": "502"
+        },
+        "name": "Fail1",
+        "dependsOn": [
+          {
+            "activity": "API_Data_Check",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "start_date": {
+        "type": "String",
+        "defaultValue": "2022-01-01T00:00"
+      },
+      "end_date": {
+        "type": "String",
+        "defaultValue": "2022-01-31T23:59"
+      },
+      "time_trunc": {
+        "type": "String",
+        "defaultValue": "day"
+      },
+      "category": {
+        "type": "String",
+        "defaultValue": "balance"
+      },
+      "widget": {
+        "type": "String",
+        "defaultValue": "balance-electrico"
+      }
+    },
+    "variables": {
+      "start_date": {
+        "type": "String"
+      },
+      "final_date": {
+        "type": "String"
+      },
+      "ccaa": {
+        "type": "Array",
+        "defaultValue": [
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "8744",
+          "13",
+          "8745",
+          "14",
+          "15",
+          "16",
+          "17",
+          "8743",
+          "8742",
+          "20",
+          "10",
+          "11",
+          "21"
+        ]
+      }
+    },
+    "annotations": []
+  }
+}

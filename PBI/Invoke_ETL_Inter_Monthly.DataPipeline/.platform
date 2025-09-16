@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Invoke_ETL_Inter_Monthly"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "51015bd7-6c86-8477-4bf5-f13d57fd6b62"
+  }
+}

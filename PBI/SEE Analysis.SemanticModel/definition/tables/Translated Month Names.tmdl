@@ -1,0 +1,58 @@
+table 'Translated Month Names'
+	lineageTag: f5540393-4230-4de9-8d2f-dd97a9bac2c0
+
+	column Month
+		lineageTag: 206a2d66-c439-4ef0-bba6-c697d0da3b73
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: SortOrder
+
+		relatedColumnDetails
+			groupByColumn: Fields
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fields
+		isHidden
+		lineageTag: 25daeab8-c633-4159-a0db-a7a5068df93f
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: SortOrder
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		isHidden
+		formatString: 0
+		lineageTag: c1c4aa48-fbb7-4e34-97b6-4c119369aa0c
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: 237743b5-8e90-41d2-8654-e8f9c256c821
+		summarizeBy: none
+		sourceColumn: [Value4]
+		sortByColumn: SortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Translated Month Names' = calculated
+		mode: import
+		source =
+				{
+				    ("Month", NAMEOF('Calendar'[MonthNameEN]), 0, "en"),
+				    ("Mes", NAMEOF('Calendar'[MonthNameES]), 1, "es"),
+				    ("Mês", NAMEOF('Calendar'[MonthNamePT]), 2, "pt")
+				}
+
+	annotation PBI_Id = 510c967833fc40469d2a7d3177a20387
+

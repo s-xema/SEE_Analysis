@@ -1,0 +1,52 @@
+table Country
+	excludeFromModelRefresh
+	lineageTag: dbc6b0cb-cf4b-4a7a-a0f6-31d9f237cc23
+
+	column CountryID
+		dataType: int64
+		formatString: 0
+		lineageTag: 2cbcfaf3-92c5-4b73-9aa6-48a51bca9eb4
+		summarizeBy: none
+		sourceColumn: CountryID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryTranslationEnglish
+		dataType: string
+		lineageTag: 1301b9e7-17ad-43be-90aa-93d8426d458e
+		summarizeBy: none
+		sourceColumn: CountryTranslationEnglish
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryTranslationSpanish
+		dataType: string
+		lineageTag: 2925da7a-a780-4ec2-9fd2-3f75731dc336
+		summarizeBy: none
+		sourceColumn: CountryTranslationSpanish
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryTranslationPortuguese
+		dataType: string
+		lineageTag: 5c517ff6-dba6-41dd-9b78-15b6a703a5fe
+		summarizeBy: none
+		sourceColumn: CountryTranslationPortuguese
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Country = m
+		mode: import
+		queryGroup: CountryGroup
+		source =
+				let
+				    Source = Table.NestedJoin(#"Country EN 2", {"CountryID"}, #"Country ES 2", {"CountryID"}, "Country ES", JoinKind.LeftOuter),
+				    #"Merged Queries" = Table.NestedJoin(Source, {"CountryID"}, #"Country PT", {"CountryID"}, "Country PT", JoinKind.LeftOuter),
+				    #"Expanded Country ES" = Table.ExpandTableColumn(#"Merged Queries", "Country ES", {"CountryTranslationSpanish"}, {"CountryTranslationSpanish"}),
+				    #"Expanded Country PT" = Table.ExpandTableColumn(#"Expanded Country ES", "Country PT", {"CountryTranslationPortuguese"}, {"CountryTranslationPortuguese"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Expanded Country PT",{"CountryID", "CountryTranslationEnglish", "CountryTranslationSpanish", "CountryTranslationPortuguese"})
+				in
+				    #"Reordered Columns"
+
+	annotation PBI_ResultType = Table
+

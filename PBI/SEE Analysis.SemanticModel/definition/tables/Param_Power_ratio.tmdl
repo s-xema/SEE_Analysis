@@ -1,0 +1,63 @@
+table Param_Power_ratio
+	lineageTag: 58f3d366-3735-47a9-8e2c-2714c32db680
+
+	column Param_Power_ratio
+		lineageTag: 835192b0-c065-447d-bb4c-f88c37beb348
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Param_Power_ratio Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Param_Power_ratio Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_Power_ratio Fields'
+		isHidden
+		lineageTag: 82a074f1-70da-4ae5-9e71-5fc1d82cc2bc
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Param_Power_ratio Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_Power_ratio Order'
+		isHidden
+		formatString: 0
+		lineageTag: 94661542-b099-4eb4-a33a-1e4d7a27ed1a
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguageID
+		isHidden
+		lineageTag: da205dec-954f-445c-9dba-456788db8a58
+		summarizeBy: none
+		sourceColumn: [Value4]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Param_Power_ratio = calculated
+		mode: import
+		source = ```
+				{
+				    ("Power", NAMEOF('Measures Table'[Power (MW)]), 0, "en"),
+				    ("Potencia", NAMEOF('Measures Table'[Power (MW)]), 0 , "es"),
+				    ("Potência", NAMEOF('Measures Table'[Power (MW)]), 0 , "pt"),
+				    ("Percentage", NAMEOF('Measures Table'[Ratio]), 1, "en"),
+				    ("Porcentaje", NAMEOF('Measures Table'[Ratio]), 1, "es"),
+				    ("Percentagem", NAMEOF('Measures Table'[Ratio]), 1, "pt")
+				    
+				}
+				
+				```
+
+	annotation PBI_Id = 85550f5c65ec46168c03d4a707908676
+

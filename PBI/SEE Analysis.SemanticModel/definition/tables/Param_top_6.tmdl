@@ -1,0 +1,60 @@
+table Param_top_6
+	lineageTag: bf043111-90cc-4b60-afab-bed52e177183
+
+	column Param_top_6
+		lineageTag: d082824b-e805-4078-b824-81491c4be567
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Param_top_6 Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Param_top_6 Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_top_6 Fields'
+		isHidden
+		lineageTag: ab0b2e56-d4b1-466f-be4a-9a1d0daedf83
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Param_top_6 Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Param_top_6 Order'
+		isHidden
+		formatString: 0
+		lineageTag: 57afc899-1e7d-4d79-bab7-124bbae1d425
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LanguajeID
+		isHidden
+		lineageTag: 2f6a586b-ee0a-43a9-a959-e2af0e8cdbde
+		summarizeBy: none
+		sourceColumn: [Value4]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Param_top_6 = calculated
+		mode: import
+		source =
+				{
+				    ("Generation", NAMEOF('Measures Table'[Energy Top 6 Sources (GWh)]), 0, "en"),
+				    ("Generación", NAMEOF('Measures Table'[Energy Top 6 Sources (GWh)]), 0 , "es"),
+				    ("Geração", NAMEOF('Measures Table'[Energy Top 6 Sources (GWh)]), 0 , "pt"),
+				    ("Percentage", NAMEOF('Measures Table'[Ratio Top 6 Sources (GWh)]), 1, "en"),
+				    ("Porcentaje", NAMEOF('Measures Table'[Ratio Top 6 Sources (GWh)]), 1, "es"),
+				    ("Percentagem", NAMEOF('Measures Table'[Ratio Top 6 Sources (GWh)]), 1, "pt")
+				}
+
+	annotation PBI_Id = 1f0051569b7149b7bd3331d5bcb4422d
+

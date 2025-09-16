@@ -1,0 +1,100 @@
+relationship 2e500f7a-096f-4f76-a04a-558c027b3128
+	fromColumn: fact_balance.SourceID
+	toColumn: Source.SourceId
+
+relationship 466a16b4-1368-4bc3-ae5c-625adbd78446
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Translated Category Name'.LanguageID
+	toColumn: Languages.LanguageID
+
+relationship c4af6aee-22b7-4499-a15e-fd9667876aee
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Translated Month Names'.LanguageID
+	toColumn: Languages.LanguageID
+
+relationship bd577c18-3095-4944-b3f7-a4ffc1f3f151
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Languages.LanguageID
+	toColumn: 'Translated Month Short'.LanguageID
+
+relationship e886c1d4-0521-4104-9bce-d111686add8a
+	fromColumn: fact_ccaa.SourceID
+	toColumn: Source.SourceId
+
+relationship ed9882f6-0428-4ac6-9c31-0dbcf7bc0599
+	fromColumn: fact_inter.CountryID
+	toColumn: Country.CountryID
+
+relationship 69a71f1d-3ef2-4000-a262-cf439b9cb901
+	fromColumn: fact_ccaa.RegionID
+	toColumn: Region.RegionID
+
+relationship 333b0168-e651-4285-8e0d-2b5f8c11efcf
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Translated Country Names'.LanguageID
+	toColumn: Languages.LanguageID
+
+relationship 2b3eb956-ef2e-4759-a80f-8dbdde7f3c07
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Translated Region Names'.LanguageID
+	toColumn: Languages.LanguageID
+
+relationship fd49acd3-cbf6-4f1f-a7b6-06e1fe46acbf
+	fromColumn: fact_balance.Date
+	toColumn: Calendar.Date
+
+relationship 836f0e32-f102-4aba-aafc-0226e092ee2f
+	fromColumn: fact_ccaa.Date
+	toColumn: Calendar.Date
+
+relationship c3b6d346-b4e7-42b3-b37c-2fef669f8aea
+	fromColumn: fact_inter.Date
+	toColumn: Calendar.Date
+
+relationship AutoDetected_c709768c-3392-4eb5-aaeb-e7b5923ef896
+	fromColumn: fact_capacity.SourceId
+	toColumn: Source.SourceId
+
+relationship 15c912b7-4fd5-4edb-bd01-1231642a69c4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: log_info.MaxDate
+	toColumn: LocalDateTable_62ade089-efe7-4d45-956a-a8051e7c6852.Date
+
+relationship 692fb486-6552-4b33-9032-bf3c91ee931b
+	toCardinality: many
+	fromColumn: fact_capacity.Year
+	toColumn: Calendar.Year
+
+relationship 4f1e5e40-f161-4468-8038-50e7268bd034
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Translated Year Name'.LanguageID
+	toColumn: Languages.LanguageID
+
+relationship 5f04dfd4-6804-4985-bab6-399e52c4b474
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Translated Source Names'.LanguageID
+	toColumn: Languages.LanguageID
+
+relationship 43869ebe-52c3-4673-bbc1-d1d4749f45e1
+	fromColumn: Param_top_6.LanguajeID
+	toColumn: Languages.LanguageID
+
+relationship 7a4a5748-fcca-42e1-9e2c-3e1e8f64f62c
+	fromColumn: Param_Gen_ratio_CCAA.LanguageID
+	toColumn: Languages.LanguageID
+
+relationship 3a0a35a3-f9ae-4132-a691-3aaca0b26336
+	fromColumn: Param_Power_ratio.LanguageID
+	toColumn: Languages.LanguageID
+
+relationship a9496f4a-f872-42e9-a1c3-dfd87f864924
+	fromColumn: Param_Abs_Perc_Demand.LanguageID
+	toColumn: Languages.LanguageID
+
