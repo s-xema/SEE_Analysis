@@ -67,7 +67,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'''Measures Table''[Export Energy (GWh)]'"
+                                "Value": "'''Measures Table''[Import Energy (GWh)]'"
                               }
                             }
                           ]
@@ -95,7 +95,7 @@
                                 "0": [
                                   {
                                     "Literal": {
-                                      "Value": "'''Measures Table''[Export Energy (GWh)]'"
+                                      "Value": "'''Measures Table''[Import Energy (GWh)]'"
                                     }
                                   }
                                 ]
@@ -119,7 +119,7 @@
                         },
                         "valueMap": [
                           {
-                            "0": "Export"
+                            "0": "Import"
                           }
                         ]
                       }
