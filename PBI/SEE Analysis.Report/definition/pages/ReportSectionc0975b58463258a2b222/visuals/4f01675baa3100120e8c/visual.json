@@ -76,12 +76,12 @@
                       "Entity": "Measures Table"
                     }
                   },
-                  "Property": "Export Energy (GWh)"
+                  "Property": "Import Energy (GWh)"
                 }
               },
-              "queryRef": "Measures Table.Export Energy (GWh)",
-              "nativeQueryRef": "Export",
-              "displayName": "Export"
+              "queryRef": "Measures Table.Import Energy (GWh)",
+              "nativeQueryRef": "Import",
+              "displayName": "Import"
             }
           ],
           "fieldParameters": [
@@ -112,7 +112,7 @@
                     "Entity": "Measures Table"
                   }
                 },
-                "Property": "Export Energy (GWh)"
+                "Property": "Import Energy (GWh)"
               }
             },
             "direction": "Descending"
